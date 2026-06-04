@@ -36,7 +36,39 @@ test_inference_pc
 a.out
 poster_cientifico_files/
 poster_vertical_files/
+poster_cientifico.aux
+poster_cientifico.log
+poster_cientifico.out
+poster_cientifico.toc
+poster_cientifico.fdb_latexmk
+poster_cientifico.fls
+poster_cientifico.synctex.gz
 latex_build/
+
+# LaTeX sources and all derivatives (not part of the visible exposition)
+*.tex
+*.cls
+*.sty
+*.bst
+*.bbl
+*.blg
+*.dvi
+*.ps
+*.eps
+*.nav
+*.snm
+*.vrb
+*.run.xml
+*.bcf
+*.idx
+*.ind
+*.ilg
+*.lof
+*.lot
+*.lox
+*.tdo
+_minted-*/
+auto/
 
 # Python
 __pycache__/
