@@ -348,14 +348,15 @@ sub, sup { font-size: 9px; }
 
     <p style="font-size:14px;margin-bottom:1.5mm;"><strong>Comparación con trabajos previos:</strong></p>
     <table class="compare">
-      <tr><th>Trabajo</th><th>Ref.</th><th>TinyML</th><th>EDOs</th><th>MPC</th><th>Altitud</th></tr>
-      <tr><td>Ihoume et al.</td><td>[2]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td></tr>
-      <tr><td>Morales-García et al.</td><td>[6]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td></tr>
-      <tr><td>Codeluppi et al.</td><td>[13]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td></tr>
-      <tr><td>Zhang et al.</td><td>[1]</td><td>&cross;</td><td>&check;</td><td>&check;</td><td>&cross;</td></tr>
-      <tr><td>Hemming et al.</td><td>[11]</td><td>&cross;</td><td>&check;</td><td>&check;</td><td>&cross;</td></tr>
-      <tr class="this-work"><td><strong>Este trabajo</strong></td><td>&mdash;</td><td><strong>&check;</strong></td><td><strong>&check;</strong></td><td><strong>&check;</strong></td><td><strong>&check;</strong></td></tr>
+      <tr><th>Trabajo</th><th>Ref.</th><th>TinyML</th><th>EDOs</th><th>MPC</th><th>Altitud</th><th>Validado HW</th></tr>
+      <tr><td>Ihoume et al.</td><td>[2]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td><td>&check;</td></tr>
+      <tr><td>Morales-Garc&iacute;a et al.</td><td>[6]</td><td>&check;</td><td>parcial</td><td>&cross;</td><td>&cross;</td><td>&check;</td></tr>
+      <tr><td>Codeluppi et al.</td><td>[13]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td><td>&check;</td></tr>
+      <tr><td>Zhang et al.</td><td>[1]</td><td>&cross;</td><td>&check;</td><td>&check;</td><td>&cross;</td><td>&cross;</td></tr>
+      <tr><td>Hemming et al.</td><td>[11]</td><td>&cross;</td><td>&check;</td><td>&check;</td><td>&cross;</td><td>&cross;</td></tr>
+      <tr class="this-work"><td><strong>Este trabajo</strong></td><td>&mdash;</td><td><strong>&check;</strong></td><td><strong>&check;</strong></td><td>parcial<sup>&dagger;</sup></td><td><strong>&check;</strong></td><td>parcial<sup>&dagger;</sup></td></tr>
     </table>
+    <p style="font-size:10px;color:#777;margin-top:1mm;font-style:italic;"><sup>&dagger;</sup> MPC: solo TinyML portado a C bare-metal; el RL-Guided MPC est&aacute; en simulaci&oacute;n. HW validado: solo el m&oacute;dulo TinyML en ESP32-S3 (223 &mu;s).</p>
   </div>
 
   <div class="sec">
