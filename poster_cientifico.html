@@ -16,7 +16,7 @@ body {
 .poster {
   width: 100%; height: 100%;
   display: flex; flex-direction: column;
-  padding: 6mm 12mm 4mm;
+  padding: 6mm 12mm 3mm;
 }
 
 /* ─── TITLE ─── */
@@ -80,19 +80,19 @@ body {
 .col {
   display: flex;
   flex-direction: column;
-  gap: 4mm;
+  gap: 3mm;
 }
 
 /* ─── SECTION ─── */
 .sec h2 {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   color: #4a5d23;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 2px solid #c8a84e;
   padding-bottom: 1mm;
-  margin-bottom: 2.5mm;
+  margin-bottom: 2mm;
 }
 
 .sec h3 {
@@ -305,7 +305,7 @@ sub, sup { font-size: 9px; }
       <tr><td>Sin análisis de incertidumbre en modelos</td><td>[14]</td><td>Sobol + Monte Carlo con N = 10<sup>4</sup></td></tr>
       <tr><td>Acoplamiento incompleto de variables</td><td>[5]</td><td>4 EDOs acopladas (T, W, C, Et)</td></tr>
       <tr><td>RL-Guided MPC no implementado en HW embebido</td><td>[11]</td><td>Portabilidad a ESP32-S3 con horizonte reducido</td></tr>
-      <tr><td>TinyML sin integración con simulación numérica</td><td>[6]</td><td>Pipeline RK4 + inferencia TFLite Micro</td></tr>
+      <tr><td>TinyML sin integración con simulación numérica</td><td>[6]</td><td>Pipeline RK4 + inferencia INT8 bare-metal en ESP32-S3 (865 params, latencia 223 &mu;s)</td></tr>
     </table>
 
     <p style="font-size:14px;margin-bottom:1.5mm;"><strong>Comparación con trabajos previos:</strong></p>
@@ -323,9 +323,9 @@ sub, sup { font-size: 9px; }
   <div class="sec">
     <h2>3. Objetivos específicos</h2>
     <ul>
-      <li><strong>OE1 &mdash; Modelo calibrado</strong> (M1&ndash;4): EDOs con corrección psicrométrica, sensibilidad global (Morris, Sobol) e incertidumbre (Monte Carlo N = 10<sup>4</sup>). RMSE &lt; 1&deg;C, &lt; 5% HR, &lt; 50 ppm CO&#8322;</li>
+      <li><strong>OE1 &mdash; Modelo y análisis de sensibilidad</strong> (M1&ndash;4): EDOs con corrección psicrométrica, sensibilidad global (Morris, Sobol) e incertidumbre (Monte Carlo N = 10<sup>4</sup>). RMSE &lt; 1&deg;C, &lt; 5% HR, &lt; 50 ppm CO&#8322;. <em>(Calibración con datos medidos en piloto: pendiente, fase ABA)</em></li>
       <li><strong>OE2 &mdash; RL-Guided MPC</strong> (M3&ndash;7): H<sub>p</sub> = 10 min (10 pasos) en ESP32-S3. Seguimiento HR &lt; &plusmn;5%, ejecución &lt; 50 ms</li>
-      <li><strong>OE3 &mdash; Módulo TinyML</strong> (M5&ndash;8): red Dense[32]&rarr;Dense[16]&rarr;Dense[1] (ReLU, INT8, 673 params, &lt; 50 KB). Predice T<sub>ext</sub> como condición de borde para las EDOs. Latencia &lt; 100 ms, &lt; 50 mW</li>
+      <li><strong>OE3 &mdash; Módulo TinyML</strong> (M5&ndash;8): red Dense[9&rarr;32&rarr;16&rarr;1] con lags (T,HR,R)&times;3, ReLU, INT8 per-channel, 865 params. <strong>Implementado y validado en ESP32-S3</strong>: latencia 223 &mu;s (objetivo 100 ms, 450&times; margen)</li>
       <li><strong>OE4 &mdash; Validación integral</strong> (M8&ndash;12): diseño ABA 12 semanas en piloto 200 m<sup>2</sup> con lechuga. Agua &ge; 40%, rendimiento &ge; 5% (p &lt; 0.05)</li>
     </ul>
   </div>
@@ -405,8 +405,8 @@ sub, sup { font-size: 9px; }
       [15] Kazdin (2011). <em>Single-Case Research Designs</em>, Oxford.
     </div>
     <div style="text-align:center;margin-top:2mm;">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://github.com/lycoronelp/invernadero-andino" alt="QR" style="width:18mm;height:18mm;">
-      <div style="font-size:9px;color:#777;">github.com/lycoronelp/invernadero-andino</div>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://github.com/02NIN20/Inverno" alt="QR" style="width:25mm;height:25mm;">
+      <div style="font-size:10px;color:#555;">github.com/02NIN20/Inverno</div>
     </div>
   </div>
 
@@ -431,7 +431,7 @@ sub, sup { font-size: 9px; }
       <img src="figures/fig5_tinyml_arch.svg" alt="Arquitectura TinyML">
       <div class="cap">Fig 4: Arquitectura del módulo TinyML para predicción de T<sub>ext</sub>. Red Dense[9&rarr;32&rarr;16&rarr;1] (9 entradas con lags t, t-1, t-2 de T, HR, R) con activación ReLU, cuantización INT8 y 865 parámetros (&lt; 50 KB, ~2.7 KB RAM). Las entradas se toman del sensor BMP280/AHT20 en tiempo real. El modelo se entrenó con <strong>8781 h de datos reales</strong> de Bogotá (Open-Meteo 2024) y se cuantizó per-channel a INT8 simulando TFLite Micro.</div>
     </div>
-    <p style="font-size:13px;font-style:italic;color:#777;">Nota: la inferencia corre en el bridge Python; la migración al ESP32-S3 mediante TFLite Micro queda para trabajo futuro.</p>
+    <p style="font-size:12px;font-style:italic;color:#777;">Nota: el bridge Python <code>serial_bridge.py</code> corre la inferencia en PC. La versión embebida (C bare-metal, 137 líneas, INT8 per-channel) ya está implementada y validada en el ESP32-S3.</p>
 
     <h3>7b. Simulación numérica</h3>
     <p style="font-size:15px;">La simulación RK4 acoplada (4 EDOs + ET&#8320;), el análisis de sensibilidad Sobol y las bandas Monte Carlo del 95% se presentan en la Sección 8.</p>
