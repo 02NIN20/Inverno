@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" font-family="Times New Roman, serif">
+  <defs>
+    <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#4a5d23"/>
+    </marker>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#faf8f4"/>
+      <stop offset="100%" stop-color="#f5f0e8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="500" height="220" fill="url(#bgGrad)" rx="4"/>
+
+  <!-- Title -->
+  <text x="250" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a5d23">
+    Arquitectura TinyML: Dense[9 → 32 → 16 → 1] · 865 params INT8
+  </text>
+
+  <!-- ===== ENTRADAS: 9 (3 vars x 3 lags) ===== -->
+  <rect x="10" y="30" width="100" height="155" rx="6" fill="#e8f0d8" stroke="#6b8e23" stroke-width="1.5"/>
+  <text x="60" y="46" text-anchor="middle" font-size="10" font-weight="bold" fill="#4a5d23">ENTRADAS (9)</text>
+  <text x="60" y="58" text-anchor="middle" font-size="8" fill="#888" font-style="italic">lags t, t-1, t-2</text>
+  <line x1="17" y1="63" x2="103" y2="63" stroke="#d4c9a8" stroke-width="0.5"/>
+  <text x="60" y="76" text-anchor="middle" font-size="9" fill="#333">T_ext</text>
+  <text x="60" y="86" text-anchor="middle" font-size="7" fill="#888">[°C, lags 0,1,2]</text>
+  <line x1="17" y1="92" x2="103" y2="92" stroke="#d4c9a8" stroke-width="0.5"/>
+  <text x="60" y="105" text-anchor="middle" font-size="9" fill="#333">HR_ext</text>
+  <text x="60" y="115" text-anchor="middle" font-size="7" fill="#888">[% HR, lags 0,1,2]</text>
+  <line x1="17" y1="121" x2="103" y2="121" stroke="#d4c9a8" stroke-width="0.5"/>
+  <text x="60" y="134" text-anchor="middle" font-size="9" fill="#333">Radiación</text>
+  <text x="60" y="144" text-anchor="middle" font-size="7" fill="#888">[W/m², lags 0,1,2]</text>
+  <line x1="17" y1="150" x2="103" y2="150" stroke="#d4c9a8" stroke-width="0.5"/>
+  <text x="60" y="163" text-anchor="middle" font-size="8" fill="#555" font-style="italic">Open-Meteo 2024</text>
+  <text x="60" y="175" text-anchor="middle" font-size="8" fill="#555" font-style="italic">Bogotá 2640 msnm</text>
+
+  <!-- Arrow: Inputs -> Dense 32 -->
+  <line x1="110" y1="105" x2="145" y2="100" stroke="#4a5d23" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== LAYER 1: DENSE 32 ===== -->
+  <rect x="148" y="35" width="100" height="110" rx="6" fill="#d4e0c0" stroke="#4a5d23" stroke-width="1.5"/>
+  <text x="198" y="55" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a5d23">Dense[32]</text>
+  <text x="198" y="70" text-anchor="middle" font-size="10" fill="#333">ReLU · INT8</text>
+  <line x1="155" y1="77" x2="241" y2="77" stroke="#a0b888" stroke-width="0.5"/>
+  <text x="198" y="93" text-anchor="middle" font-size="10" fill="#555">320 params</text>
+  <text x="198" y="108" text-anchor="middle" font-size="10" fill="#555">32 neuronas</text>
+  <text x="198" y="125" text-anchor="middle" font-size="9" fill="#888" font-style="italic">~1.0 KB</text>
+
+  <!-- Arrow: Dense 32 -> Dense 16 -->
+  <line x1="248" y1="100" x2="275" y2="100" stroke="#4a5d23" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== LAYER 2: DENSE 16 ===== -->
+  <rect x="278" y="40" width="100" height="100" rx="6" fill="#c8d8a8" stroke="#4a5d23" stroke-width="1.5"/>
+  <text x="328" y="60" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a5d23">Dense[16]</text>
+  <text x="328" y="75" text-anchor="middle" font-size="10" fill="#333">ReLU · INT8</text>
+  <line x1="285" y1="82" x2="371" y2="82" stroke="#a0b888" stroke-width="0.5"/>
+  <text x="328" y="98" text-anchor="middle" font-size="10" fill="#555">528 params</text>
+  <text x="328" y="113" text-anchor="middle" font-size="10" fill="#555">16 neuronas</text>
+  <text x="328" y="128" text-anchor="middle" font-size="9" fill="#888" font-style="italic">~1.6 KB</text>
+
+  <!-- Arrow: Dense 16 -> Output -->
+  <line x1="378" y1="100" x2="405" y2="100" stroke="#4a5d23" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== OUTPUT ===== -->
+  <rect x="408" y="50" width="82" height="80" rx="6" fill="#e0d8c0" stroke="#c8a84e" stroke-width="1.5"/>
+  <text x="449" y="70" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a5d23">SALIDA</text>
+  <line x1="415" y1="77" x2="483" y2="77" stroke="#d4c9a8" stroke-width="0.5"/>
+  <text x="449" y="95" text-anchor="middle" font-size="10" fill="#555">17 params</text>
+  <text x="449" y="112" text-anchor="middle" font-size="10" fill="#333">T_pred</text>
+  <text x="449" y="124" text-anchor="middle" font-size="8" fill="#888">[°C a 1 h]</text>
+
+  <!-- Footer -->
+  <text x="250" y="200" text-anchor="middle" font-size="9" fill="#4a5d23" font-weight="bold">
+    RMSE = 0.81 °C  ·  INT8 = Float  ·  Datos: 8781 h reales Open-Meteo
+  </text>
+  <text x="250" y="213" text-anchor="middle" font-size="8" fill="#999" font-style="italic">
+    Modelo: 865 params INT8  ·  RAM: ~2.7 KB  ·  Runtime: TFLite Micro &lt; 50 KB  ·  Latencia objetivo: &lt; 100 ms (ESP32-S3)
+  </text>
+</svg>

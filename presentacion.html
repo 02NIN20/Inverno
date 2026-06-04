@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVERNADERO ANDINO · MONITOR EN TIEMPO REAL</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --g: #33ff33; --gd: #1a991a; --gdd: #0d4d0d;
+  --a: #ffb000; --ad: #996a00;
+  --bg: #0a0a0a; --bg2: #0f0f0f; --bg3: #141414;
+  --b: #1a4d1a; --bl: #2a6b2a;
+  --tx: #c0c0c0; --txd: #707070;
+  --f: 'Courier New', monospace;
+  --red: #ff4444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#050505; color:var(--gd); font-family:var(--f); font-size:12px;
+  padding:6px; min-height:100vh;
+}
+.window {
+  max-width:1280px; margin:0 auto;
+  border:2px solid var(--bl); background:var(--bg2);
+}
+.title-bar {
+  background:var(--bg3); border-bottom:2px solid var(--bl);
+  padding:5px 10px; display:flex; align-items:center; gap:8px; font-size:11px;
+}
+.title-bar .dot { width:8px; height:8px; border:1px solid var(--bl); background:var(--bg); }
+.title-bar .dot.r { background:var(--gdd); border-color:var(--g); }
+.title-bar .tt { color:var(--gd); text-transform:uppercase; letter-spacing:1px; }
+.title-bar .st { margin-left:auto; font-size:10px; color:var(--txd); }
+
+/* STATUS BAR */
+.status-row {
+  display:flex; gap:6px; padding:6px 10px;
+  background:var(--bg); border-bottom:1px solid var(--b);
+  align-items:center; flex-wrap:wrap; font-size:10px;
+}
+.status-dot { width:6px; height:6px; display:inline-block; }
+.status-dot.on { background:var(--g); }
+.status-dot.off { background:var(--red); }
+.status-item { display:flex; align-items:center; gap:4px; color:var(--txd); margin-right:12px; }
+.status-item .v { color:var(--a); }
+
+/* LAYOUT */
+.main-grid {
+  display:grid; grid-template-columns:260px 1fr 280px; gap:0; min-height:500px;
+}
+@media (max-width:1000px) { .main-grid { grid-template-columns:1fr; } }
+
+.col-l, .col-r {
+  background:var(--bg); border-right:1px solid var(--b);
+  padding:10px; overflow-y:auto;
+}
+.col-r { border-right:none; border-left:1px solid var(--b); }
+.col-m { padding:10px; overflow-y:auto; }
+
+.panel {
+  border:1px solid var(--b); margin-bottom:8px;
+}
+.panel-h {
+  background:var(--bg3); border-bottom:1px solid var(--b);
+  padding:5px 8px; font-size:10px; color:var(--a); letter-spacing:1px; text-transform:uppercase;
+}
+.panel-b { padding:8px 10px; }
+
+/* SENSOR CARD */
+.sensor-val {
+  font-size:24px; color:var(--g); font-weight:bold; line-height:1;
+}
+.sensor-label { font-size:9px; color:var(--txd); text-transform:uppercase; margin-bottom:2px; }
+.sensor-unit { font-size:9px; color:var(--ad); }
+.sensor-row { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px; }
+
+/* CHARTS */
+.chart-wrap {
+  border:1px solid var(--b); background:var(--bg); margin-bottom:8px;
+}
+.chart-wrap canvas { width:100% !important; max-height:200px; }
+
+/* TABS */
+.tabs { display:flex; gap:2px; margin-bottom:8px; flex-wrap:wrap; }
+.tab {
+  background:var(--bg); border:1px solid var(--b); color:var(--gd);
+  font-family:var(--f); font-size:10px; padding:5px 12px; cursor:pointer;
+  text-transform:uppercase; letter-spacing:1px;
+}
+.tab.sel { color:var(--a); border-color:var(--ad); background:var(--bg3); }
+.tab-content { display:none; }
+.tab-content.show { display:block; }
+
+/* EQ */
+.eq { font-size:11px; line-height:2; padding:8px; color:var(--gd); background:var(--bg); border:1px solid var(--b); margin:4px 0; overflow-x:auto; white-space:nowrap; }
+.eq .frac { display:inline-block; text-align:center; vertical-align:middle; margin:0 2px; }
+.eq .frac>span { display:block; padding:0 4px; }
+.eq .frac>span:first-child { border-bottom:1px solid var(--g); }
+
+/* BLINK */
+.blink { animation:bl 1s step-end infinite; } @keyframes bl{50%{visibility:hidden}}
+
+/* SCROLL */
+::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--bl); }
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; font-size:10px; }
+th,td { border:1px solid var(--b); padding:3px 6px; text-align:left; }
+th { background:var(--bg3); color:var(--a); font-weight:normal; }
+td { color:var(--gd); }
+
+/* GAUGE */
+.gauge { width:100%; height:6px; background:var(--b); margin:4px 0; position:relative; }
+.gauge-fill { height:100%; background:var(--g); transition:width 0.5s; }
+.gauge-fill.warn { background:var(--a); }
+.gauge-fill.danger { background:var(--red); }
+
+.vent-indicator {
+  display:inline-block; padding:2px 8px; border:1px solid var(--b);
+  font-size:10px; text-transform:uppercase;
+}
+.vent-indicator.on { border-color:var(--a); color:var(--a); }
+.vent-indicator.off { border-color:var(--gd); color:var(--gd); }
+</style>
+</head>
+<body>
+
+<div class="window">
+
+<div class="title-bar">
+  <span class="dot r"></span><span class="dot"></span><span class="dot"></span>
+  <span class="tt">INVERNADERO.ANDINO · MONITOR</span>
+  <span class="st" id="clock">--:--:--</span>
+</div>
+
+<div class="status-row">
+  <span class="status-item"><span class="status-dot" id="dot-conn"></span> ESP32</span>
+  <span class="status-item">AHT20: <span class="v" id="st-aht">--</span></span>
+  <span class="status-item">BMP280: <span class="v" id="st-bmp">--</span></span>
+  <span class="status-item">Presion: <span class="v" id="st-pres">--</span> hPa</span>
+  <span class="status-item" style="margin-left:auto">Muestras: <span class="v" id="st-count">0</span></span>
+  <span class="status-item">Bridge: <span class="v" id="st-bridge">...</span></span>
+</div>
+
+<div class="main-grid">
+
+<!-- ═══ LEFT COLUMN ═══ -->
+<div class="col-l">
+
+  <div class="panel">
+    <div class="panel-h">Sensores en Vivo</div>
+    <div class="panel-b">
+      <div class="sensor-label">Temperatura (AHT20)</div>
+      <div class="sensor-row"><span class="sensor-val" id="v-ta">--.-</span><span class="sensor-unit">°C</span></div>
+      <div class="sensor-label">Humedad Relativa</div>
+      <div class="sensor-row"><span class="sensor-val" id="v-ha">--.-</span><span class="sensor-unit">%</span></div>
+      <div class="gauge"><div class="gauge-fill" id="g-rh" style="width:0%"></div></div>
+
+      <div class="sensor-label" style="margin-top:8px">Temperatura (BMP280)</div>
+      <div class="sensor-row"><span class="sensor-val" id="v-tb">--.-</span><span class="sensor-unit">°C</span></div>
+      <div class="sensor-label">Presion Barometrica</div>
+      <div class="sensor-row"><span class="sensor-val" id="v-pb">--.-</span><span class="sensor-unit">hPa</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">Variables Derivadas</div>
+    <div class="panel-b">
+      <div class="sensor-label">CO2 Estimado</div>
+      <div class="sensor-row"><span class="sensor-val" id="v-co2">--</span><span class="sensor-unit">ppm</span></div>
+      <div class="sensor-label">Evapotranspiracion</div>
+      <div class="sensor-row"><span class="sensor-val" id="v-etr">--</span><span class="sensor-unit">mm/h</span></div>
+      <div class="sensor-label">Ventilacion</div>
+      <div class="sensor-row"><span class="vent-indicator off" id="v-vent">OFF</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">Parametros (Bogota)</div>
+    <div class="panel-b">
+      <table>
+        <tr><td>Altitud</td><td>2640 msnm</td></tr>
+        <tr><td>P atmosferica</td><td>750 hPa (teorica)</td></tr>
+        <tr><td>Gamma</td><td>0.048 kPa/°C</td></tr>
+        <tr><td>Delta t (RK4)</td><td>60 s</td></tr>
+        <tr><td>Muestreo</td><td>5 s</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CENTER ═══ -->
+<div class="col-m">
+
+  <div class="tabs">
+    <button class="tab sel" onclick="switchTab('live')">Graficos Vivo</button>
+    <button class="tab" onclick="switchTab('sim')">Simulacion</button>
+    <button class="tab" onclick="switchTab('eq')">Ecuaciones</button>
+    <button class="tab" onclick="switchTab('tinyml')">TinyML</button>
+    <button class="tab" onclick="switchTab('info')">Proyecto</button>
+  </div>
+
+  <!-- LIVE CHARTS -->
+  <div id="tab-live" class="tab-content show">
+    <div class="chart-wrap"><canvas id="chTemp"></canvas></div>
+    <div class="chart-wrap"><canvas id="chHum"></canvas></div>
+    <div class="chart-wrap"><canvas id="chPres"></canvas></div>
+  </div>
+
+  <!-- SIMULATION -->
+  <div id="tab-sim" class="tab-content">
+    <div class="chart-wrap"><canvas id="chSimT"></canvas></div>
+    <div class="chart-wrap"><canvas id="chSimRH"></canvas></div>
+    <div class="chart-wrap"><canvas id="chSimCO2"></canvas></div>
+  </div>
+
+  <!-- EQUATIONS -->
+  <div id="tab-eq" class="tab-content">
+    <div class="panel"><div class="panel-h">EDO-1: Balance de Temperatura</div>
+    <div class="panel-b"><div class="eq">dTin/dt = (Qsol + Qcal - Qvent - Qet) / (rho·Cp·V)</div></div></div>
+    <div class="panel"><div class="panel-h">EDO-2: Balance de Humedad</div>
+    <div class="panel-b"><div class="eq">dWin/dt = (mET - Qvent·(Win-Wout)) / (V·rho) * 1000</div></div></div>
+    <div class="panel"><div class="panel-h">EDO-3: Penman-Monteith (ETr)</div>
+    <div class="panel-b"><div class="eq" style="font-size:10px">
+      ET0 = <span class="frac"><span>0.408·Δ·Rn + γ·<span class="frac"><span>900</span><span>T+273</span></span>·u2·(es-ea)</span><span>Δ + γ·(1+0.34·u2)</span></span>
+    </div></div></div>
+    <div class="panel"><div class="panel-h">EDO-4: Balance de CO2</div>
+    <div class="panel-b"><div class="eq">dCin/dt = -Pn·A/V + (Cout-C)/τ</div></div></div>
+    <div class="panel"><div class="panel-h">Metodo Numerico: RK4</div>
+    <div class="panel-b"><div class="eq">y[n+1] = y[n] + dt/6·(k1+2k2+2k3+k4)</div></div></div>
+  </div>
+
+  <!-- TINYML -->
+  <div id="tab-tinyml" class="tab-content">
+    <div class="panel">
+      <div class="panel-h">Prediccion TinyML: T_ext a 1 h</div>
+      <div class="panel-b" style="text-align:center">
+        <div style="font-size:28px;color:#33ff33;font-weight:bold;margin:8px 0" id="tm-pred">--.-</div>
+        <div style="font-size:10px;color:#707070">°C · Temperatura exterior predicha (1 h)</div>
+        <div style="font-size:10px;color:#707070;margin-top:4px" id="tm-inputs">T: -- °C  HR: -- %  Rad: -- W/m²</div>
+        <div style="font-size:10px;color:#707070" id="tm-status">Modelo: <span id="tm-ok">cargando...</span></div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="chTinyML"></canvas></div>
+  </div>
+
+  <!-- INFO -->
+  <div id="tab-info" class="tab-content">
+    <div class="panel">
+      <div class="panel-h">Objetivo del Proyecto</div>
+      <div class="panel-b" style="color:var(--gd);line-height:1.8">
+        Sistema ciber-fisico para optimizacion del microclima en invernaderos andinos
+        integrando modelado matematico (4 EDOs, RK4) con instrumentacion electronica
+        de bajo costo (XIAO ESP32S3 + AHT20 + BMP280).
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h">Hardware</div>
+      <div class="panel-b">
+        <table>
+          <tr><td>Placa</td><td>XIAO ESP32S3 (240MHz, 8MB Flash)</td></tr>
+          <tr><td>Sensores</td><td>AHT20 (0x38) + BMP280 (0x77)</td></tr>
+          <tr><td>Bus</td><td>I2C1: GPIO5=SDA, GPIO6=SCL @ 50kHz</td></tr>
+          <tr><td>Firmware</td><td>C bare-metal / ESP-IDF v6.1</td></tr>
+          <tr><td>Salida</td><td>CSV por USB-Serial @ 115200 baud</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h">Logros</div>
+      <div class="panel-b">
+        <div style="color:var(--gd);font-size:10px;line-height:2">
+          [x] Modelo 4 EDOs con RK4 funcional<br>
+          [x] Firmware C bare-metal sin dependencias<br>
+          [x] Drivers propios AHT20 + BMP280<br>
+          [x] Datos en tiempo real (este dashboard)<br>
+          [x] Control ventilacion ON/OFF<br>
+          [ ] Calibracion con datos experimentales<br>
+          [ ] Telemetria WiFi/MQTT
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RIGHT COLUMN ═══ -->
+<div class="col-r">
+  <div class="panel">
+    <div class="panel-h">Estado del Sistema</div>
+    <div class="panel-b" style="font-size:10px;line-height:2.2;color:var(--gd)" id="sys-log">
+      Esperando conexion...
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-h">Metricas (ultima hora)</div>
+    <div class="panel-b">
+      <table>
+        <tr><td>T min</td><td id="mm-tmin">--</td></tr>
+        <tr><td>T max</td><td id="mm-tmax">--</td></tr>
+        <tr><td>T media</td><td id="mm-tavg">--</td></tr>
+        <tr><td>RH min</td><td id="mm-rhmin">--</td></tr>
+        <tr><td>RH max</td><td id="mm-rhmax">--</td></tr>
+        <tr><td>RH media</td><td id="mm-rhavg">--</td></tr>
+        <tr><td>P min</td><td id="mm-pmin">--</td></tr>
+        <tr><td>P max</td><td id="mm-pmax">--</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">TinyML: Predicción T_ext</div>
+    <div class="panel-b" style="text-align:center;font-size:10px">
+      <div style="font-size:22px;color:#33ff33;font-weight:bold" id="tm-side">--.- °C</div>
+      <div style="color:#707070;margin:2px 0">Dense[32→16→1] · 673 params · INT8</div>
+      <div style="color:#ffb000;font-size:9px" id="tm-side-ok">--</div>
+    </div>
+  </div>
+
+</div><!-- /main-grid -->
+
+<!-- STATUS BAR -->
+<div style="background:var(--bg);border-top:2px solid var(--bl);padding:4px 10px;font-size:10px;display:flex;justify-content:space-between;color:var(--txd)">
+  <span>Universidad Distrital F.J.C. · Metodologia de la Investigacion · 2026</span>
+  <span id="status-time" class="blink">&#x2588;</span>
+</div>
+
+</div><!-- /window -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('sel'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('show'));
+  document.querySelector('.tab[onclick*="'+name+'"]').classList.add('sel');
+  document.getElementById('tab-'+name).classList.add('show');
+  if (name==='sim') genSimCharts();
+  if (name==='tinyml') genTinyMLChart();
+  if (name==='live') Object.values(liveCharts).forEach(c=>c.resize());
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CHART CONFIG
+// ═══════════════════════════════════════════════════════════════════════════
+Chart.defaults.color='#1a991a'; Chart.defaults.borderColor='#1a4d1a';
+Chart.defaults.font.family="'Courier New',monospace"; Chart.defaults.font.size=9;
+Chart.defaults.plugins.tooltip={backgroundColor:'#0f0f0f',borderColor:'#33ff33',borderWidth:1};
+
+function mkLiveChart(id, label, color, ylabel, maxPoints, extra) {
+  var ctx=document.getElementById(id).getContext('2d');
+  return new Chart(ctx, {
+    type:'line',
+    data:{labels:[],datasets:[{label:label,data:[],borderColor:color,borderWidth:1,pointRadius:0,tension:0.2}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      animation:false,
+      plugins:{legend:{labels:{usePointStyle:true,boxWidth:5,font:{size:9}}}},
+      scales:{
+        x:{grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8},maxTicksLimit:10}},
+        y:{grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8}},
+           title:{display:true,text:ylabel,color:'#ffb000',font:{size:9}}}
+      },
+      ...extra
+    }
+  });
+}
+
+var liveCharts = {};
+var liveData = { t:[], ta:[], ha:[], tb:[], pb:[], co2:[], etr:[] };
+var MAX_PTS = 120; // 10 min @ 5s
+
+liveCharts.temp = mkLiveChart('chTemp', 'AHT20 T', '#33ff33', '°C', MAX_PTS);
+liveCharts.hum = mkLiveChart('chHum', 'RH', '#ffb000', '%', MAX_PTS,
+  {scales:{y:{min:0,max:100,grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8}}}}});
+liveCharts.pres = mkLiveChart('chPres', 'BMP280 P', '#996a00', 'hPa', MAX_PTS);
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  TINYML
+// ═══════════════════════════════════════════════════════════════════════════
+var tinymlChart = null;
+var tmData = { t:[], actual:[], pred:[] };
+var TM_MAX = 60;
+
+function genTinyMLChart() {
+  if (tinymlChart) return;
+  var ctx = document.getElementById('chTinyML').getContext('2d');
+  tinymlChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:[],
+      datasets:[
+        {label:'T_ext (actual)', data:[], borderColor:'#33ff33', borderWidth:1, pointRadius:0, tension:0.2},
+        {label:'T_pred (TinyML)', data:[], borderColor:'#ffb000', borderWidth:1, pointRadius:0, tension:0.2, borderDash:[3,3]}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, animation:false,
+      plugins:{legend:{labels:{usePointStyle:true,boxWidth:5,font:{size:9}}}},
+      scales:{
+        x:{grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8},maxTicksLimit:10}},
+        y:{grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8}},
+           title:{display:true,text:'°C',color:'#ffb000',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function updateTinyML(d) {
+  document.getElementById('tm-pred').textContent = d.tinyml_pred != null ? d.tinyml_pred.toFixed(1) : '--.-';
+  document.getElementById('tm-side').textContent = d.tinyml_pred != null ? d.tinyml_pred.toFixed(1)+' °C' : '--.- °C';
+  document.getElementById('tm-side-ok').textContent = d.tinyml_ok ? 'ONLINE' : 'SIN MODELO';
+  document.getElementById('tm-ok').textContent = d.tinyml_ok ? 'OK' : 'sin modelo';
+  document.getElementById('tm-ok').style.color = d.tinyml_ok ? '#33ff33' : '#ff4444';
+  document.getElementById('tm-inputs').textContent =
+    'T: '+(d.bmp_temp!=null?d.bmp_temp.toFixed(1):'--')+' °C  '+
+    'HR: '+(d.aht_hum!=null?d.aht_hum.toFixed(1):'--')+' %  '+
+    'Rad: estim. W/m²';
+
+  // Append to chart data
+  if (d.tinyml_pred != null) {
+    var t = tmData.t.length;
+    tmData.t.push(t);
+    tmData.actual.push(d.bmp_temp);
+    tmData.pred.push(d.tinyml_pred);
+    while (tmData.t.length > TM_MAX) {
+      tmData.t.shift(); tmData.actual.shift(); tmData.pred.shift();
+    }
+    if (tinymlChart) {
+      tinymlChart.data.labels = tmData.t;
+      tinymlChart.data.datasets[0].data = tmData.actual;
+      tinymlChart.data.datasets[1].data = tmData.pred;
+      tinymlChart.update('none');
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  SIMULATION CHARTS (static data)
+// ═══════════════════════════════════════════════════════════════════════════
+var simCharts = {};
+var simMade = false;
+function genSimCharts() {
+  if (simMade) return; simMade=true;
+  var d={h:[],tin:[],tout:[],rh:[],co2:[]};
+  for(var i=0;i<288;i++){
+    var h=i%24;
+    var tout=14+6*Math.sin(2*Math.PI*(h-14)/24);
+    var sol=Math.sin(Math.PI*Math.max(0,Math.min(1,(h-6)/12)));
+    var tin=tout+2+sol*8+2*Math.sin(2*Math.PI*(h-10)/24);
+    var rh=Math.max(60,Math.min(98,75-5+20*Math.cos(2*Math.PI*(h-14)/24)+(tin-tout)*1.2));
+    var co2=420+180*Math.cos(2*Math.PI*(h-4)/24);
+    d.h.push(h+'h');d.tin.push(tin);d.tout.push(tout);d.rh.push(rh);d.co2.push(co2);
+  }
+  function mkS(id,ds,yl){
+    var ctx=document.getElementById(id).getContext('2d');
+    simCharts[id]=new Chart(ctx,{type:'line',data:{labels:d.h,datasets:ds},options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true,boxWidth:5,font:{size:9}}}},
+      scales:{
+        x:{grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8},callback:function(v,i){return i%24===0?d.h[i]:''}}},
+        y:{grid:{color:'#0a1a0a'},ticks:{color:'#1a991a',font:{size:8}},title:{display:true,text:yl,color:'#ffb000',font:{size:9}}}
+      }
+    }});
+  }
+  mkS('chSimT',[{label:'T.in',data:d.tin,borderColor:'#33ff33',borderWidth:1,tension:0.3,pointRadius:0},
+    {label:'T.out',data:d.tout,borderColor:'#555',borderWidth:0.8,borderDash:[3,3],tension:0.3,pointRadius:0}],'°C');
+  mkS('chSimRH',[{label:'RH',data:d.rh,borderColor:'#ffb000',borderWidth:1,tension:0.3,pointRadius:0,fill:true,backgroundColor:'rgba(255,176,0,0.05)'}],'%');
+  mkS('chSimCO2',[{label:'CO2',data:d.co2,borderColor:'#1a991a',borderWidth:1,tension:0.3,pointRadius:0,fill:true,backgroundColor:'rgba(51,255,51,0.05)'}],'ppm');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  POLL BRIDGE
+// ═══════════════════════════════════════════════════════════════════════════
+var sampleCount = 0;
+var healthOk = false;
+
+function fmt(v, d) { return v!==null&&!isNaN(v) ? v.toFixed(d) : '--'; }
+
+function updateUI(d) {
+  document.getElementById('v-ta').textContent = fmt(d.aht_temp, 2);
+  document.getElementById('v-ha').textContent = fmt(d.aht_hum, 2);
+  document.getElementById('v-tb').textContent = fmt(d.bmp_temp, 2);
+  document.getElementById('v-pb').textContent = fmt(d.bmp_press, 2);
+  document.getElementById('v-co2').textContent = fmt(d.co2, 1);
+  document.getElementById('v-etr').textContent = fmt(d.etr, 2);
+
+  // Ventilation
+  var ve = document.getElementById('v-vent');
+  if (d.vent) { ve.textContent='ON'; ve.className='vent-indicator on'; }
+  else { ve.textContent='OFF'; ve.className='vent-indicator off'; }
+
+  // RH gauge
+  var rh = d.aht_hum || 0;
+  var g = document.getElementById('g-rh');
+  g.style.width = Math.min(100,Math.max(0,rh))+'%';
+  g.className = 'gauge-fill' + (rh>85?' warn':rh>95?' danger':'');
+
+  // Status
+  document.getElementById('st-aht').textContent = d.aht_ok ? 'OK' : '--';
+  document.getElementById('st-bmp').textContent = d.bmp_ok ? 'OK' : '--';
+  document.getElementById('st-pres').textContent = fmt(d.bmp_press, 1);
+  document.getElementById('st-count').textContent = sampleCount;
+  document.getElementById('st-bridge').textContent = healthOk?'ONLINE':'...';
+
+  var dot = document.getElementById('dot-conn');
+  dot.className = 'status-dot ' + (d.connected?'on':'off');
+}
+
+function updateMetrics(hist) {
+  if (!hist || hist.length<2) return;
+  var ta=[], rh=[], pb=[];
+  hist.forEach(function(d){
+    if (d.aht_temp!=null) ta.push(d.aht_temp);
+    if (d.aht_hum!=null) rh.push(d.aht_hum);
+    if (d.bmp_press!=null) pb.push(d.bmp_press);
+  });
+  if (ta.length>0) {
+    document.getElementById('mm-tmin').textContent = Math.min.apply(null,ta).toFixed(1)+'°C';
+    document.getElementById('mm-tmax').textContent = Math.max.apply(null,ta).toFixed(1)+'°C';
+    document.getElementById('mm-tavg').textContent = (ta.reduce(function(a,b){return a+b},0)/ta.length).toFixed(1)+'°C';
+  }
+  if (rh.length>0) {
+    document.getElementById('mm-rhmin').textContent = Math.min.apply(null,rh).toFixed(1)+'%';
+    document.getElementById('mm-rhmax').textContent = Math.max.apply(null,rh).toFixed(1)+'%';
+    document.getElementById('mm-rhavg').textContent = (rh.reduce(function(a,b){return a+b},0)/rh.length).toFixed(1)+'%';
+  }
+  if (pb.length>0) {
+    document.getElementById('mm-pmin').textContent = Math.min.apply(null,pb).toFixed(1)+' hPa';
+    document.getElementById('mm-pmax').textContent = Math.max.apply(null,pb).toFixed(1)+' hPa';
+  }
+}
+
+function poll() {
+  fetch('http://localhost:8765/data')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+                      healthOk = true;
+                      if (d.aht_temp!=null || d.bmp_temp!=null) {
+                        sampleCount++;
+                        updateUI(d);
+                        updateTinyML(d);
+
+        // Append to live data
+        var t = liveData.t.length>0 ? liveData.t[liveData.t.length-1]+5 : 0;
+        liveData.t.push(t);
+        liveData.ta.push(d.aht_temp);
+        liveData.ha.push(d.aht_hum);
+        liveData.tb.push(d.bmp_temp);
+        liveData.pb.push(d.bmp_press);
+        liveData.co2.push(d.co2);
+        liveData.etr.push(d.etr);
+
+        // Trim
+        while (liveData.t.length > MAX_PTS) {
+          liveData.t.shift(); liveData.ta.shift(); liveData.ha.shift();
+          liveData.tb.shift(); liveData.pb.shift(); liveData.co2.shift(); liveData.etr.shift();
+        }
+
+        // Update charts
+        var labels = liveData.t.map(function(v){ return Math.floor(v/60)+':'+String(Math.floor(v%60)).padStart(2,'0'); });
+        liveCharts.temp.data.labels = labels;
+        liveCharts.temp.data.datasets[0].data = liveData.ta;
+        liveCharts.temp.update('none');
+
+        liveCharts.hum.data.labels = labels;
+        liveCharts.hum.data.datasets[0].data = liveData.ha;
+        liveCharts.hum.update('none');
+
+        liveCharts.pres.data.labels = labels;
+        liveCharts.pres.data.datasets[0].data = liveData.pb;
+        liveCharts.pres.update('none');
+
+        document.getElementById('sys-log').innerHTML =
+          '['+d.timestamp+'] OK<br>'+
+          'AHT20: '+fmt(d.aht_temp,1)+'°C / '+fmt(d.aht_hum,1)+'%<br>'+
+          'BMP280: '+fmt(d.bmp_temp,1)+'°C / '+fmt(d.bmp_press,1)+' hPa<br>'+
+          'CO2: '+fmt(d.co2,0)+' ppm | ETr: '+fmt(d.etr,2)+' mm/h<br>'+
+          'Vent: '+(d.vent?'ON':'OFF')+' | Muestras: '+sampleCount;
+      }
+
+      // Fetch history for metrics
+      fetch('http://localhost:8765/history')
+        .then(function(r){ return r.json(); })
+        .then(function(h){ updateMetrics(h); })
+        .catch(function(){});
+    })
+    .catch(function(){
+      healthOk = false;
+      document.getElementById('st-bridge').textContent = 'OFFLINE';
+      document.getElementById('dot-conn').className = 'status-dot off';
+      document.getElementById('sys-log').innerHTML = 'Sin conexion al bridge.<br>Ejecuta: python3 serial_bridge.py';
+    });
+
+  setTimeout(poll, 2000);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CLOCK
+// ═══════════════════════════════════════════════════════════════════════════
+function tick() {
+  var n = new Date();
+  var t = String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = t;
+  document.getElementById('status-time').textContent = t;
+}
+setInterval(tick, 1000); tick();
+
+// Start polling
+setTimeout(poll, 500);
+</script>
+
+</body>
+</html>

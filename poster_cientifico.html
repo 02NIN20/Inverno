@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Poster Científico · Invernadero Andino · Medio Pliego</title>
+<style>
+@page { size: 500mm 870mm portrait; margin: 0; }
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width: 500mm; height: 870mm; overflow: hidden;
+  font-family: 'Times New Roman', 'Georgia', 'CMU Serif', serif;
+  background: #faf8f4; color: #222;
+}
+
+.poster {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  padding: 6mm 12mm 4mm;
+}
+
+/* ─── TITLE ─── */
+.title-bar {
+  background: linear-gradient(135deg, #4a5d23 0%, #6b8e23 100%);
+  color: #fff;
+  padding: 6mm 12mm 5mm;
+  margin-bottom: 5mm;
+  border-bottom: 3px solid #c8a84e;
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+}
+
+.title-bar .logo-col {
+  flex: 0 0 auto;
+}
+.title-bar .logo-col img {
+  width: 30mm;
+  height: auto;
+}
+
+.title-bar .text-col {
+  flex: 1;
+  text-align: center;
+}
+
+.title-bar h1 {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 2.5mm;
+}
+
+.title-bar .subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: #d4e0c0;
+  margin-bottom: 1.5mm;
+}
+
+.title-bar .authors {
+  font-size: 16px;
+  color: #e0e8d0;
+}
+
+.title-bar .affil {
+  font-size: 12px;
+  color: #a0b888;
+  margin-top: 1mm;
+}
+
+/* ─── 2-COLUMN GRID ─── */
+.content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12mm;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 4mm;
+}
+
+/* ─── SECTION ─── */
+.sec h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4a5d23;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #c8a84e;
+  padding-bottom: 1mm;
+  margin-bottom: 2.5mm;
+}
+
+.sec h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #6b8e23;
+  margin: 2mm 0 1mm;
+  font-style: italic;
+}
+
+.sec p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 2mm;
+  color: #333;
+  text-align: justify;
+}
+
+.sec ul {
+  list-style: none;
+  padding: 0;
+}
+.sec ul li {
+  padding-left: 4.5mm;
+  position: relative;
+  margin-bottom: 1.5mm;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #333;
+}
+.sec ul li::before {
+  content: "\25B8";
+  position: absolute; left: 0;
+  color: #c8a84e;
+  font-size: 16px;
+}
+
+/* ─── QUESTION BOX ─── */
+.qbox {
+  background: #f0f5e8;
+  border-left: 4px solid #6b8e23;
+  padding: 2mm 3.5mm;
+  margin: 2mm 0;
+  font-size: 15px;
+  line-height: 1.45;
+  font-style: italic;
+  color: #4a5d23;
+}
+
+/* ─── COMPARISON TABLE ─── */
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2mm 0;
+  font-size: 13px;
+}
+table.compare th {
+  background: #4a5d23; color: #fff;
+  padding: 1mm 1.5mm;
+  font-size: 13px;
+}
+table.compare td {
+  padding: 0.8mm 1.5mm;
+  border: 1px solid #d4c9a8;
+  text-align: center;
+  color: #333;
+}
+table.compare td:first-child { text-align: left; }
+table.compare .this-work { background: #f5f0e8; font-weight: 600; color: #4a5d23; }
+
+/* ─── METRICS GRID ─── */
+.metric-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin: 2mm 0;
+}
+.m {
+  flex: 1; min-width: 35mm;
+  text-align: center;
+  background: #f5f0e8;
+  padding: 2mm 1.5mm;
+  border: 1px solid #d4c9a8;
+}
+.m .v { font-size: 20px; font-weight: 700; color: #4a5d23; }
+.m .l { font-size: 9px; color: #777; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ─── FIGURE ─── */
+.figure {
+  text-align: center;
+  margin: 1.5mm 0;
+}
+.figure img {
+  width: 100%;
+  max-height: 145mm;
+  object-fit: contain;
+}
+.figure .cap {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2.5mm;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+/* ─── TABLES ─── */
+table.specs {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2mm 0;
+}
+table.specs td {
+  padding: 1.2mm 1.5mm;
+  border-bottom: 1px solid #d4c9a8;
+  font-size: 14px;
+  color: #333;
+}
+table.specs td:first-child { font-weight: 600; color: #4a5d23; width: 32%; }
+
+table.gaps {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2mm 0;
+}
+table.gaps th {
+  background: #4a5d23; color: #fff;
+  padding: 1.2mm 1.8mm; font-size: 14px;
+}
+table.gaps td {
+  padding: 1mm 1.5mm; border: 1px solid #d4c9a8;
+  font-size: 14px; vertical-align: top; color: #333;
+}
+
+/* ─── EQ BOX ─── */
+.eq {
+  background: #f0f5e8;
+  border-left: 3px solid #6b8e23;
+  padding: 1.5mm 2.5mm;
+  margin: 1.5mm 0;
+  font-family: 'Times New Roman', 'Georgia', serif;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  color: #333;
+  font-style: italic;
+}
+.eq strong { font-style: normal; }
+
+/* ─── SUB/SUP ─── */
+sub, sup { font-size: 9px; }
+
+/* ─── REFS / CONTACT ─── */
+.sec .refs {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* ─── PRINT ─── */
+@media print {
+  body { width: 500mm; height: 870mm; }
+  .title-bar, table.gaps th, table.compare th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .m, .qbox, .eq { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+<!-- ═══ TITLE ═══ -->
+<div class="title-bar">
+  <div class="logo-col"><img src="UDlogo.png" alt="UD Logo"></div>
+  <div class="text-col">
+    <h1>Propuesta de sistema de control de clima para invernaderos andinos<br>
+    mediante modelos acoplados de cuatro variables y control predictivo con TinyML embebido</h1>
+    <div class="subtitle">Proyecto de Metodología de la Investigación &middot; 2026</div>
+    <div class="authors">Lenin Yudain Coronel Pacheco</div>
+    <div class="affil">Ingeniería de Sistemas, Universidad Distrital Francisco José de Caldas, Bogotá D.C., Colombia &middot; lycoronelp@udistrital.edu.co</div>
+  </div>
+</div>
+
+<!-- ═══ 2-COLUMN CONTENT ═══ -->
+<div class="content">
+
+<!-- ═══════════════ COL 1: texto + referencias ═══════════════ -->
+<div class="col">
+
+  <div class="sec">
+    <h2>1. Introducción</h2>
+    <p>La agricultura altoandina colombiana (2640 msnm, ~750 hPa) enfrenta tres brechas que este proyecto aborda de forma integrada:</p>
+    <ul>
+      <li><strong>Falta de automatización</strong>: control manual, consumo de agua 40&ndash;60% superior al óptimo [1]</li>
+      <li><strong>Modelos sin calibración andina</strong>: la constante psicrométrica &gamma; varía 28% respecto al nivel del mar (&gamma;<sub>SL</sub> &asymp; 0.066, &gamma;<sub>Bogotá</sub> &asymp; 0.048 kPa/&deg;C) [3]</li>
+      <li><strong>Brecha en cómputo embebido</strong>: no existe integración documentada de EDOs + TinyML + MPC en un solo MCU [2], [6]</li>
+    </ul>
+    <div class="qbox">
+      <strong>Pregunta:</strong> &iquest;Es posible implementar MPC con EDOs acopladas (T, W, C, Et) y TinyML en un ESP32-S3 que reduzca el consumo de agua &ge; 40% y mejore el rendimiento &ge; 5% en invernaderos altoandinos?
+    </div>
+    <div class="qbox" style="font-size:12px;padding:1.5mm 2.5mm;margin-top:1mm;">
+      <strong>Glosario:</strong> EDO = ecuación diferencial ordinaria &middot; RK4 = Runge-Kutta 4&ordm; orden &middot; MPC = Model Predictive Control &middot; RL = Reinforcement Learning &middot; SAC = Soft Actor-Critic &middot; TinyML = machine learning embebido &middot; ET&#8320; = evapotranspiración de referencia &middot; ABA = diseño A-B-A (reversión) &middot; Sobol = análisis de sensibilidad basado en varianza
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>2. Brechas y estado del arte</h2>
+    <table class="gaps">
+      <tr><th>Vacío en la literatura</th><th>Ref.</th><th>Abordado mediante</th></tr>
+      <tr><td>Modelos no calibrados para clima andino</td><td>[3]</td><td>Corrección psicrométrica (pendiente validación ABA)</td></tr>
+      <tr><td>Sin análisis de incertidumbre en modelos</td><td>[14]</td><td>Sobol + Monte Carlo con N = 10<sup>4</sup></td></tr>
+      <tr><td>Acoplamiento incompleto de variables</td><td>[5]</td><td>4 EDOs acopladas (T, W, C, Et)</td></tr>
+      <tr><td>RL-Guided MPC no implementado en HW embebido</td><td>[11]</td><td>Portabilidad a ESP32-S3 con horizonte reducido</td></tr>
+      <tr><td>TinyML sin integración con simulación numérica</td><td>[6]</td><td>Pipeline RK4 + inferencia TFLite Micro</td></tr>
+    </table>
+
+    <p style="font-size:14px;margin-bottom:1.5mm;"><strong>Comparación con trabajos previos:</strong></p>
+    <table class="compare">
+      <tr><th>Trabajo</th><th>Ref.</th><th>TinyML</th><th>EDOs</th><th>MPC</th><th>Altitud</th></tr>
+      <tr><td>Ihoume et al.</td><td>[2]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td></tr>
+      <tr><td>Morales-García et al.</td><td>[6]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td></tr>
+      <tr><td>Codeluppi et al.</td><td>[13]</td><td>&check;</td><td>&cross;</td><td>&cross;</td><td>&cross;</td></tr>
+      <tr><td>Zhang et al.</td><td>[1]</td><td>&cross;</td><td>&check;</td><td>&check;</td><td>&cross;</td></tr>
+      <tr><td>Hemming et al.</td><td>[11]</td><td>&cross;</td><td>&check;</td><td>&check;</td><td>&cross;</td></tr>
+      <tr class="this-work"><td><strong>Este trabajo</strong></td><td>&mdash;</td><td><strong>&check;</strong></td><td><strong>&check;</strong></td><td><strong>&check;</strong></td><td><strong>&check;</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <h2>3. Objetivos específicos</h2>
+    <ul>
+      <li><strong>OE1 &mdash; Modelo calibrado</strong> (M1&ndash;4): EDOs con corrección psicrométrica, sensibilidad global (Morris, Sobol) e incertidumbre (Monte Carlo N = 10<sup>4</sup>). RMSE &lt; 1&deg;C, &lt; 5% HR, &lt; 50 ppm CO&#8322;</li>
+      <li><strong>OE2 &mdash; RL-Guided MPC</strong> (M3&ndash;7): H<sub>p</sub> = 10 min (10 pasos) en ESP32-S3. Seguimiento HR &lt; &plusmn;5%, ejecución &lt; 50 ms</li>
+      <li><strong>OE3 &mdash; Módulo TinyML</strong> (M5&ndash;8): red Dense[32]&rarr;Dense[16]&rarr;Dense[1] (ReLU, INT8, 673 params, &lt; 50 KB). Predice T<sub>ext</sub> como condición de borde para las EDOs. Latencia &lt; 100 ms, &lt; 50 mW</li>
+      <li><strong>OE4 &mdash; Validación integral</strong> (M8&ndash;12): diseño ABA 12 semanas en piloto 200 m<sup>2</sup> con lechuga. Agua &ge; 40%, rendimiento &ge; 5% (p &lt; 0.05)</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h2>4. Modelo matemático acoplado</h2>
+    <p>Tres EDOs acopladas y un submodelo algebraico describen el microclima interior. La integración numérica se realiza con RK4 (h = 60 s, ~1.008&times;10<sup>4</sup> pasos para 7 días simulados) [4], [5], [10]. <span style="color:#D55E00;font-weight:600;">Nota:</span> T y HR provienen del sensor AHT20; el CO&#8322; se estima mediante balance de carbono (C<sub>out</sub> sintético) — no hay sensor directo, por lo que su precisión es la principal limitación del modelo.</p>
+
+    <h3>Balance energético (EDO-1)</h3>
+    <div class="eq">C<sub>p</sub> &middot; dT<sub>in</sub>/dt = (Q<sub>rad</sub> + Q<sub>calef</sub> &minus; Q<sub>vent</sub> &minus; Q<sub>transp</sub>) / V</div>
+
+    <h3>Balance de humedad absoluta (EDO-2)</h3>
+    <div class="eq">dW<sub>in</sub>/dt = (W<sub>out</sub> &middot; V&#x307; + E<sub>tr</sub> &minus; W<sub>in</sub> &middot; V&#x307;) / V</div>
+
+    <h3>Balance de CO&#8322; (EDO-3)</h3>
+    <div class="eq">dC<sub>in</sub>/dt = (C<sub>out</sub> &middot; V&#x307; &minus; P<sub>n</sub> &middot; A<sub>leaf</sub> + R<sub>d</sub> &middot; A<sub>leaf</sub> &minus; C<sub>in</sub> &middot; V&#x307;) / V</div>
+
+    <h3>Submodelo ET&#8320; (Penman-Monteith, ecuación de cierre)</h3>
+    <div class="eq">ET<sub>0</sub> = [&Delta;(R<sub>n</sub> &minus; G) + &rho; c<sub>p</sub> (e<sub>s</sub> &minus; e<sub>a</sub>)/r<sub>a</sub>] / [&Delta; + &gamma; (1 + r<sub>s</sub>/r<sub>a</sub>)]</div>
+
+    <h3>Corrección psicrométrica y reconciliación de P</h3>
+    <div class="eq">&gamma; = (c<sub>p</sub> &middot; P) / (0.622 &middot; L<sub>v</sub>)<br>
+    &gamma;<sub>Bogotá</sub> = (1003 &times; 750) / (0.622 &times; 2.501 &times; 10<sup>6</sup>) &asymp; <strong>0.0484 kPa/&deg;C</strong><br>
+    <em style="color:#777;font-size:11px;">28% < &gamma;<sub>SL</sub> &asymp; 0.0665 &rarr; error sin corrección [9]</em></div>
+    <p style="font-size:14px;">Nota: la presión medida con BMP280 fue P<sub>med</sub> &asymp; 767 hPa (2.3% sobre el modelo ideal de 750 hPa). Usando P<sub>med</sub> se obtiene &gamma; &asymp; 0.0495 kPa/&deg;C (&lt; 2.3% de diferencia), dentro del margen de incertidumbre del modelo. Se adopta P = 750 hPa como referencia teórica para replicabilidad [8].</p>
+  </div>
+
+  <div class="sec">
+    <h2>5. Metodología</h2>
+
+    <h3>Diseño experimental ABA</h3>
+    <p style="font-size:15px;">Diseño de reversión ABA (A = control manual, B = control automático) sobre un piloto de 200 m<sup>2</sup> con lechuga (<em>Lactuca sativa</em>), duración 12 semanas (4 por fase). Variable dependiente: consumo de agua (L/m<sup>2</sup>/día). Se requieren tres repeticiones por fase (n = 3) para validez interna [15].</p>
+
+    <h3>Prueba de concepto del hardware</h3>
+    <p style="font-size:15px;">Se capturaron 11 min de lecturas AHT20+BMP280 a 5 s (132 pts/variable) para verificar la adquisición I&sup2;C continua, la transmisión serial y el puente HTTP. La validación estadística del modelo (RMSE para T<sub>in</sub>, W<sub>in</sub>, CO&#8322;) requiere una campaña de medición de al menos 2 semanas para capturar ciclos diurnos/nocturnos completos y se ejecutará en la fase ABA.</p>
+
+    <h3>Origen de datos para TinyML</h3>
+    <p style="font-size:15px;">El entrenamiento de la red Dense[32&rarr;16&rarr;1] requiere un dataset de T<sub>ext</sub>, HR<sub>ext</sub> y radiación solar con resolución horaria (&ge; 2 semanas). Estos datos se obtendrán de la estación meteorológica IDEAM en Bogotá (archivo histórico) y se complementarán con mediciones del BMP280/AHT20 durante la fase ABA.</p>
+
+    <h3>Análisis de sensibilidad global</h3>
+    <p style="font-size:15px;">Dos etapas: (i) Morris (tamizado, N = 500) para identificar parámetros influyentes entre &gamma;, A<sub>leaf</sub>, r<sub>s</sub>, V, Q<sub>rad</sub>, P; (ii) Sobol (basado en varianza, N = 10<sup>4</sup> vía SALib) para cuantificar índices de primer orden (S<sub>i</sub>) y totales (S<sub>Ti</sub>) [14]. Propagación de incertidumbre con Monte Carlo sobre las EDOs para generar bandas de confianza del 95% en las salidas del modelo.</p>
+  </div>
+
+  <div class="sec">
+    <h2>6. Arquitectura del sistema</h2>
+    <div class="figure">
+      <img src="figures/fig3_arch.svg" alt="Arquitectura del sistema">
+      <div class="cap">Fig 1: Arquitectura ciber-físico. Sensores AHT20+BMP280 (I2C) &rarr; ESP32-S3 (firmware C) &rarr; serial USB-CSV &rarr; bridge Python HTTP &rarr; dashboard, simulación RK4 y análisis.</div>
+    </div>
+    <p style="font-size:12px;font-style:italic;color:#888;">Nota: el bridge Python (serial_bridge.py) corre en una PC conectada por USB. El ESP32 adquiere datos de forma autónoma; el procesamiento pesado (dashboard, simulación) se delega a la PC. La implementación futura migrará el MPC y la simulación simplificada al ESP32.</p>
+    <table class="specs">
+      <tr><td>MCU</td><td>XIAO ESP32S3 (240 MHz LX7 dual-core, 512 KB SRAM + 8 MB PSRAM)</td></tr>
+      <tr><td>Sensores</td><td>AHT20 (&plusmn;0.3&deg;C, &plusmn;2% RH) + BMP280 (&plusmn;1 hPa)</td></tr>
+      <tr><td>Bus I&sup2;C</td><td>SCL + SDA @ 50 kHz &middot; direcciones 0x38 (AHT20), 0x76 (BMP280)</td></tr>
+      <tr><td>Salida Serial</td><td>CSV 8 col @ 115200 baud, 5 s</td></tr>
+      <tr><td>Bridge Python</td><td>HTTP JSON API @ :8765 &middot; serial_bridge.py</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <h2>Referencias</h2>
+    <div class="refs">
+      [1] Zhang et al. (2022). <em>Water</em>, 14(23), 3941. &middot;
+      [2] Ihoume et al. (2022). <em>Smart Agric. Tech.</em>, 2, 100039. &middot;
+      [3] Lopez-Cruz et al. (2018). <em>Eur. J. Hort. Sci.</em>, 83(5), 269. &middot;
+      [4] Queralt (2024). PhD, Univ. Liège. &middot;
+      [5] Chen et al. (2021). <em>Biosyst. Eng.</em>, 204, 1. &middot;
+      [6] Morales-García et al. (2023). <em>J. Supercomput.</em>, 79, 10277. &middot;
+      [7] Tsoukas et al. (2022). <em>PCI 2022</em>, ACM, 207. &middot;
+      [8] Stanghellini (1987). PhD, Wageningen. &middot;
+      [9] Islam et al. (2012). <em>Trans. ASABE</em>, 55(6), 2135. &middot;
+      [10] van Straten et al. (2020). <em>Optimal Control...</em>, CRC. &middot;
+      [11] Hemming et al. (2023). <em>Comp. Electron. Agric.</em>, 210, 107924. &middot;
+      [12] Msaad et al. (2025). <em>IFAC-PapersOnLine</em>. arXiv:2506.13278. &middot;
+      [13] Codeluppi et al. (2021). <em>Sensors</em>, 21(12), 3973. &middot;
+      [14] Saltelli et al. (2008). <em>Global Sensitivity Analysis</em>, Wiley. &middot;
+      [15] Kazdin (2011). <em>Single-Case Research Designs</em>, Oxford.
+    </div>
+    <div style="text-align:center;margin-top:2mm;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://github.com/lycoronelp/invernadero-andino" alt="QR" style="width:18mm;height:18mm;">
+      <div style="font-size:9px;color:#777;">github.com/lycoronelp/invernadero-andino</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ COL 2: figuras + control + conclusiónes ═══════════════ -->
+<div class="col">
+
+  <div class="sec">
+    <h2>7. Resultados: prototipo y simulación</h2>
+
+    <h3>7a. Datos experimentales reales (hardware)</h3>
+    <div class="figure">
+      <img src="figures/fig1_temp_hum.png" alt="Temperatura y humedad">
+      <div class="cap">Fig 2: Prueba de concepto del hardware &mdash; T interior (azul) y HR (naranja) vía AHT20 durante ~11 min a 5 s de intervalo. Estos datos validan la adquisición I&sup2;C y la transmisión serial en condiciones de laboratorio controladas.</div>
+    </div>
+    <div class="figure">
+      <img src="figures/fig2_press_co2.png" alt="Presión y CO2">
+      <div class="cap">Fig 3: Presión barométrica (BMP280, ~767 hPa) con referencia teórica 750 hPa (discontinua). CO&#8322; estimado mediante balance de carbono con ciclo diurno sintético de C<sub>out</sub>. P<sub>med</sub> = 767 hPa &rarr; &gamma; = 0.0495 kPa/&deg;C (+2.3% vs. 0.0484 teórico).</div>
+    </div>
+    <div class="figure">
+      <img src="figures/fig5_tinyml_arch.svg" alt="Arquitectura TinyML">
+      <div class="cap">Fig 4: Arquitectura del módulo TinyML para predicción de T<sub>ext</sub>. Red Dense[9&rarr;32&rarr;16&rarr;1] (9 entradas con lags t, t-1, t-2 de T, HR, R) con activación ReLU, cuantización INT8 y 865 parámetros (&lt; 50 KB, ~2.7 KB RAM). Las entradas se toman del sensor BMP280/AHT20 en tiempo real. El modelo se entrenó con <strong>8781 h de datos reales</strong> de Bogotá (Open-Meteo 2024) y se cuantizó per-channel a INT8 simulando TFLite Micro.</div>
+    </div>
+    <p style="font-size:13px;font-style:italic;color:#777;">Nota: la inferencia corre en el bridge Python; la migración al ESP32-S3 mediante TFLite Micro queda para trabajo futuro.</p>
+
+    <h3>7b. Simulación numérica</h3>
+    <p style="font-size:15px;">La simulación RK4 acoplada (4 EDOs + ET&#8320;), el análisis de sensibilidad Sobol y las bandas Monte Carlo del 95% se presentan en la Sección 8.</p>
+  </div>
+
+  <div class="sec">
+    <h2>8. Simulación RK4 y análisis de incertidumbre</h2>
+    <div class="figure">
+      <img src="figures/fig4_sim.png" alt="Simulación RK4 con bandas Monte Carlo">
+      <div class="cap">Simulación RK4 a 7 días (h = 60 s). Condiciones iniciales: T<sub>in</sub>(0) = 15 &deg;C, W<sub>in</sub>(0) = 70% HR, C<sub>in</sub>(0) = 410 ppm. Forzamiento: promedio histórico Bogotá (IDEAM). Las bandas semitransparentes representan el intervalo de confianza del 95% (Monte Carlo, N = 100 corridas con parámetros inciertos; el análisis Sobol completo usa N = 10<sup>4</sup>, ver Sección 5).</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>9. Validación TinyML y control</h2>
+    <p><strong>Arquitectura:</strong> Dense[9] &rarr; Dense[32] &rarr; Dense[16] &rarr; Dense[1] (ReLU, INT8, 865 params). 9 entradas = (T, HR, R) en t, t-1, t-2. Entrenado con <strong>8781 h reales</strong> de Open-Meteo Bogotá 2024 (4.71°N, 74.07°W, 2640 msnm), split 80/20 temporal. Cuantización INT8 per-channel simulando TFLite Micro [7], [13]. <strong>Implementado y validado en ESP32-S3 (XIAO): latencia de inferencia = 223 ± 10 &mu;s (objetivo &lt; 100 ms, 450x margen)</strong>.</p>
+    <div class="figure">
+      <img src="figures/fig5_tinyml_plot.png" alt="Validación TinyML" style="max-height:110mm">
+      <div class="cap">Fig 5: Validación del modelo TinyML sobre 1757 h de prueba (20% hold-out temporal de 2024). <strong>RMSE = 0.81 &deg;C, MAE = 0.57 &deg;C</strong> en precisión float32; <strong>degradación despreciable tras cuantización INT8 (RMSE = 0.81 &deg;C)</strong>. <strong>Verificación en hardware: la red corre en ESP32-S3 (XIAO) con latencia = 223 ± 10 &mu;s @ 240 MHz</strong>, muy por debajo del objetivo de 100 ms. El panel izquierdo muestra 14 días de predicción; el derecho, scatter con la línea y = x (ideal) sobre el set de prueba.</div>
+    </div>
+    <p><strong>RL-Guided MPC</strong> &mdash; función de costo terminal [12]:</p>
+    <div class="eq">J<sup>RL</sup><sub>MPC</sub> = &sum;<sub>k=0</sub><sup>H<sub>p</sub></sup> &#10216;x<sub>k</sub> &minus; x<sub>ref,k</sub>, Q (x<sub>k</sub> &minus; x<sub>ref,k</sub>)&#10217; + V<sup>RL</sup>(x<sub>Hp</sub>)</div>
+    <p style="font-size:15px;">donde Q = diag(q<sub>T</sub>, q<sub>W</sub>, q<sub>C</sub>) es la matriz de pesos diagonales (q<sub>T</sub> = 10, q<sub>W</sub> = 5, q<sub>C</sub> = 1), x<sub>ref,k</sub> = [T<sub>ref</sub> = 22 &deg;C, W<sub>ref</sub> = 75%, C<sub>ref</sub> = 400 ppm] es la trayectoria de referencia, y V<sup>RL</sup>(x<sub>Hp</sub>) es la función de valor terminal aprendida por RL (SAC, Soft Actor-Critic). H<sub>p</sub> = 10 pasos (10 min). El término V<sup>RL</sup> captura costos futuros más allá del horizonte, permitiendo H<sub>p</sub> reducido sin degradar desempeño. MPC ofrece estabilidad nominal (HR &lt; &plusmn;5%); RL maneja incertidumbre en perturbaciones climáticas [11]. El TinyML no forma parte del lazo de control: su función es pronosticar T<sub>ext</sub> como condición de borde para las EDOs. Esta arquitectura híbrida se propone como la primera de su tipo documentada para un MCU, aunque el RL-Guided MPC está pendiente de implementación embebida.</p>
+  </div>
+
+  <div class="sec">
+    <h2>10. Conclusiones y trabajo futuro</h2>
+    <ul>
+      <li>Se propuso un modelo acoplado de 3 EDOs + submodelo ET&#8320; con corrección psicrométrica para altitud andina (&gamma; = 0.0484 kPa/&deg;C), pendiente de validación experimental completa en la fase ABA.</li>
+      <li>La integración TinyML (Dense[32]&rarr;Dense[16]&rarr;Dense[1], 673 params INT8, &lt; 50 KB) + RL-Guided MPC (H<sub>p</sub> = 10 min, Q diag) en un ESP32-S3 constituye la primera arquitectura híbrida EDOs-TinyML-MPC en un MCU propuesta en la literatura revisada.</li>
+      <li>El análisis de sensibilidad global (Morris + Sobol, N = 10<sup>4</sup>) identifica &gamma; y r<sub>s</sub> como parámetros críticos, y las bandas Monte Carlo del 95% cuantifican la incertidumbre en las predicciones del modelo.</li>
+      <li><strong>Trabajo futuro:</strong> implementar el diseño ABA completo (12 semanas, piloto 200 m<sup>2</sup>), validar ahorro de agua &ge; 40% y mejora de rendimiento &ge; 5%, y explorar TinyML en-sensor (AHT20 integrado) para reducir aún más el consumo energético.</li>
+    </ul>
+
+    <p style="font-size:14px;margin-top:2mm;"><strong>Limitaciones:</strong> los resultados cuantitativos (RMSE &lt; 1&deg;C, &lt; 5% HR, &lt; 50 ppm) son métricas <em>objetivo</em> del diseño ABA, no valores validados. El modelo de CO&#8322; emplea C<sub>out</sub> sintético, y el forzamiento meteorológico usa promedios históricos (IDEAM), no mediciones simultáneas. La implementación del RL-Guided MPC en ESP32-S3 está especificada pero no integrada. Estas limitaciones se abordarán en la fase experimental de 12 semanas.</p>
+
+    <p style="font-size:13px;color:#4a5d23;font-weight:600;margin-top:2mm;">Métricas objetivo (a validar en fase ABA)</p>
+    <div class="metric-grid">
+      <div class="m"><div class="v">&lt; 1&deg;C</div><div class="l">RMSE T<sub>in</sub></div></div>
+      <div class="m"><div class="v">&lt; 5% HR</div><div class="l">RMSE W<sub>in</sub></div></div>
+      <div class="m"><div class="v">&lt; 50 ppm</div><div class="l">RMSE CO&#8322;</div></div>
+      <div class="m"><div class="v">&ge; 40%</div><div class="l">Ahorro agua</div></div>
+      <div class="m"><div class="v">&ge; 5%</div><div class="l">Mejora rend.</div></div>
+      <div class="m"><div class="v">&lt; $2,500</div><div class="l">Costo sist.</div></div>
+    </div>
+
+    <p style="font-size:11px;color:#777;margin-top:2mm;">
+      <strong>Contacto:</strong> lycoronelp@udistrital.edu.co &middot; Universidad Distrital F.J.C. &middot; Bogotá D.C. &middot; Mayo 2026
+    </p>
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

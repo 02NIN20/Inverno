@@ -1,0 +1,84 @@
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ─── ESP-IDF / ESP32 build ───
+build/
+sdkconfig
+sdkconfig.old
+*.elf
+*.bin
+*.map
+*.hex
+*.uf2
+managed_components/
+dependencies.lock
+
+# ─── ESP-IDF tools (locales, no necesarios en repo) ───
+.espressif/
+tools/
+
+# ─── Logs y datos temporales ───
+*.log
+*.csv
+!openmeteo_bogota_2024.json  # dataset real, sí va al repo
+datos_real.csv
+simulacion.csv
+esp32_log.csv
+bridge.log
+
+# ─── Build artifacts (LaTeX) ───
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.bbl
+*.blg
+*.lof
+*.lot
+missfont.log
+poster_cientifico.aux
+poster_cientifico.fdb_latexmk
+poster_cientifico.fls
+poster_cientifico.log
+poster_cientifico.out
+poster_cientifico.pdf
+poster_latex.pdf
+
+# ─── Backups ───
+*.bak
+*.swp
+*.swo
+*~
+poster_cientifico (1).pdf
+poster_cientifico (1).tex
+
+# ─── LaTeX sources (no compilan fuera del entorno) ───
+*.tex
+poster_cientifico.tex
+
+# ─── IDEs y editores ───
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ─── Binarios de test ───
+test_inference_pc
+
+# ─── Documentos generados localmente ───
+# (se mantienen los .md de memoria y los .html/pdf finales)
+poster_horizontal.html
+poster_cientifico.pdf
+poster_latex.pdf

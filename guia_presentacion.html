@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Presentación · Invernadero Andino</title>
+<style>
+:root {
+  --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a;
+  --g: #33ff33; --gd: #1a991a; --gdd: #0d4d0d;
+  --a: #ffb000; --ad: #996a00;
+  --tx: #c0c0c0; --txd: #707070;
+  --b: #1a4d1a; --bl: #2a6b2a;
+  --red: #ff4444; --blue: #4499ff;
+  --f: 'Courier New', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg); color: var(--tx); font-family: var(--f);
+  font-size: 13px; line-height: 1.7; padding: 10px;
+}
+.wrap { max-width: 1100px; margin: 0 auto; }
+
+/* ─── TITLE BAR ─── */
+.title-bar {
+  background: linear-gradient(135deg, #0d4d0d, #1a4d1a);
+  border: 2px solid var(--bl);
+  padding: 12px 18px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.title-bar h1 { font-size: 18px; color: var(--g); text-transform: uppercase; letter-spacing: 1px; }
+.title-bar .meta { margin-left: auto; font-size: 10px; color: var(--txd); text-align: right; }
+
+/* ─── SEARCH / FILTER ─── */
+.toolbar {
+  display: flex; gap: 8px; padding: 8px 0; margin-bottom: 10px;
+  flex-wrap: wrap; align-items: center;
+}
+.toolbar input {
+  background: var(--bg2); border: 1px solid var(--b); color: var(--g);
+  font-family: var(--f); font-size: 12px; padding: 6px 10px; flex: 1; min-width: 200px;
+}
+.toolbar input:focus { outline: none; border-color: var(--gd); }
+.toolbar .tag { cursor: pointer; padding: 4px 10px; border: 1px solid var(--b); font-size: 10px; color: var(--txd); }
+.toolbar .tag.sel { border-color: var(--a); color: var(--a); background: var(--bg3); }
+.toolbar .tag:hover { border-color: var(--gd); }
+
+/* ─── SECTIONS ─── */
+.section {
+  border: 1px solid var(--b); margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+.section:hover { border-color: var(--bl); }
+.section.hidden { display: none; }
+
+.section-h {
+  background: var(--bg3); border-bottom: 1px solid var(--b);
+  padding: 8px 12px; cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-h .num {
+  color: var(--a); font-weight: bold; font-size: 13px; min-width: 28px;
+}
+.section-h .title { color: var(--g); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.section-h .toggle { margin-left: auto; color: var(--txd); font-size: 11px; }
+.section-h .tags { display: flex; gap: 4px; margin-left: 12px; }
+.section-h .tags span { font-size: 8px; padding: 1px 6px; border: 1px solid var(--b); color: var(--txd); }
+
+.section-b {
+  padding: 12px 16px; display: none;
+}
+.section-b.open { display: block; }
+
+.section-b p { margin-bottom: 10px; color: var(--tx); }
+.section-b strong { color: var(--g); }
+.section-b em { color: var(--a); }
+.section-b code {
+  background: var(--bg2); border: 1px solid var(--b); padding: 1px 5px;
+  font-size: 12px; color: var(--blue);
+}
+.section-b .highlight {
+  background: var(--bg3); border-left: 3px solid var(--a);
+  padding: 8px 12px; margin: 8px 0; font-size: 12px; color: var(--txd);
+}
+
+/* ─── EQUATION ─── */
+.eq-box {
+  background: var(--bg2); border: 1px solid var(--b);
+  padding: 10px 14px; margin: 8px 0; text-align: center;
+  font-size: 14px; color: var(--g); overflow-x: auto;
+}
+.eq-box .label { font-size: 10px; color: var(--txd); text-align: right; display: block; margin-top: 4px; }
+.eq-box .desc { font-size: 11px; color: var(--txd); text-align: left; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--b); }
+
+/* ─── TABLE ─── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+th, td { border: 1px solid var(--b); padding: 5px 8px; text-align: left; }
+th { background: var(--bg3); color: var(--a); font-weight: normal; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+td { color: var(--tx); }
+tr:hover td { background: var(--bg3); }
+
+/* ─── BADGE ─── */
+.badge {
+  display: inline-block; padding: 1px 8px; font-size: 9px; font-weight: bold;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.badge.ok { background: #0d4d0d; color: var(--g); border: 1px solid var(--g); }
+.badge.warn { background: #4d3d00; color: var(--a); border: 1px solid var(--a); }
+.badge.fail { background: #4d0000; color: var(--red); border: 1px solid var(--red); }
+.badge.info { background: #00334d; color: var(--blue); border: 1px solid var(--blue); }
+
+/* ─── STATUS GRID ─── */
+.status-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; margin: 8px 0; }
+.status-grid .item { padding: 6px 10px; border: 1px solid var(--b); background: var(--bg2); }
+.status-grid .item .l { font-size: 9px; color: var(--txd); text-transform: uppercase; }
+.status-grid .item .v { font-size: 14px; color: var(--g); font-weight: bold; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  border: 1px solid; padding: 8px 12px; margin: 8px 0; font-size: 12px;
+}
+.callout.info { border-color: var(--bl); background: #0a1a0a; }
+.callout.warn { border-color: var(--a); background: #1a1500; }
+.callout.danger { border-color: var(--red); background: #1a0000; }
+
+/* ─── TREE ─── */
+.tree { padding-left: 20px; border-left: 2px solid var(--b); margin: 6px 0; }
+.tree .node { margin: 3px 0; }
+.tree .node .dot { color: var(--a); margin-right: 6px; }
+.tree .node .note { color: var(--txd); font-size: 11px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 700px) {
+  .title-bar { flex-direction: column; text-align: center; }
+  .title-bar .meta { text-align: center; }
+  .status-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<div class="title-bar">
+  <div>
+    <h1>🏔️ Invernadero Andino · Guía de Presentación</h1>
+    <div style="font-size:11px;color:var(--txd);margin-top:4px;">
+      Sistema ciber-físico · 4 EDOs acopladas · TinyML · RL-Guided MPC · ESP32-S3
+    </div>
+  </div>
+  <div class="meta">
+    <div>v1.0 · 2026</div>
+    <div style="font-size:9px;color:var(--gdd);">Proyecto Metodología de la Investigación</div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Buscar en la guía (ej: gamma, TinyML, MPC, EDO-2...)..." oninput="filterContent()">
+  <span class="tag sel" onclick="toggleTag(this,'todas')" data-tag="todas">Todas</span>
+  <span class="tag" onclick="toggleTag(this,'poster')" data-tag="poster">Poster</span>
+  <span class="tag" onclick="toggleTag(this,'falla')" data-tag="falla">Falla</span>
+  <span class="tag" onclick="toggleTag(this,'explica')" data-tag="explica">Explica</span>
+  <span class="tag" onclick="toggleTag(this,'ecuacion')" data-tag="ecuacion">Ecuación</span>
+  <span class="tag" onclick="toggleTag(this,'futuro')" data-tag="futuro">Futuro</span>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 1: VISIÓN GLOBAL -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">1</span>
+    <span class="title">Visión global del proyecto</span>
+    <span class="tags"><span>explica</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b open">
+    <p><strong>¿Qué es este proyecto?</strong> Un sistema ciber-físico que monitorea y optimiza el microclima de invernaderos en zonas altoandinas (2640 msnm, Bogotá). Combina cuatro componentes que nunca se habían integrado en un solo microcontrolador:</p>
+    <div class="tree">
+      <div class="node"><span class="dot">▶</span> <strong>Hardware de sensado</strong> — XIAO ESP32-S3 + AHT20 (T/HR) + BMP280 (presión) <span class="note">| I2C @ 50 kHz, serial CSV @ 115200 baud</span></div>
+      <div class="node"><span class="dot">▶</span> <strong>Modelo dinámico</strong> — 4 EDOs acopladas (T, W, C, ET) resueltas con RK4 <span class="note">| h=60 s, ~10,080 pasos/7 días</span></div>
+      <div class="node"><span class="dot">▶</span> <strong>TinyML</strong> — Red neuronal Dense[9→32→16→1] (865 params INT8) que predice T<sub>ext</sub> <span class="note">| RMSE 0.81°C, datos reales 2024</span></div>
+      <div class="node"><span class="dot">▶</span> <strong>RL-Guided MPC</strong> — Control predictivo con costo terminal aprendido por RL (SAC) <span class="note">| H<sub>p</sub>=10 min, Q=diag(10,5,1)</span></div>
+    </div>
+    <p><strong>Pregunta de investigación:</strong> ¿Es posible implementar MPC con EDOs acopladas y TinyML en un ESP32-S3 que reduzca el consumo de agua ≥40% y mejore el rendimiento ≥5% en invernaderos altoandinos, sin conectividad externa?</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 2: ARQUITECTURA DEL SISTEMA -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica poster">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">2</span>
+    <span class="title">Arquitectura del sistema (Fig 1 del póster)</span>
+    <span class="tags"><span>explica</span><span>poster</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <p>El flujo de datos atraviesa 4 etapas:</p>
+    <div class="tree">
+      <div class="node"><span class="dot">1.</span> <strong>Sensores</strong> (columna izquierda del SVG) <span class="note">| AHT20 addr 0x38 (T±0.3°C, HR±2%), BMP280 addr 0x77 (P±1 hPa)</span></div>
+      <div class="node"><span class="dot">2.</span> <strong>ESP32-S3</strong> (columna central) <span class="note">| Firmware C bare-metal, loop cada 5 s, watchdog, manejo de errores, inferencia TinyML</span></div>
+      <div class="node"><span class="dot">3.</span> <strong>Bridge Python</strong> (tercera columna) <span class="note">| serial_bridge.py lee CSV por USB, sirve HTTP JSON en :8765</span></div>
+      <div class="node"><span class="dot">4.</span> <strong>Salidas</strong> (columna derecha) <span class="note">| Dashboard web (Chart.js), simulación RK4, generación de figuras</span></div>
+    </div>
+    <div class="highlight"><strong>Lo que el póster muestra bien:</strong> el SVG de arquitectura (Fig 1) es manual y detallado. Muestra todas las conexiones: I2C → MCU → USB-Serial → Bridge → Dashboard/Simulación.</div>
+
+    <div class="callout warn">
+      <strong>⚠️ Lo que NO dice la arquitectura SVG:</strong> no muestra el TinyML dentro del ESP32, ni el lazo de control MPC. La caja "TinyML" aparece pequeña dentro del MCU pero no se detalla el flujo de inferencia → EDOs → MPC.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 3: ECUACIONES DEL MODELO -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica ecuacion">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">3</span>
+    <span class="title">Ecuaciones del modelo — Explicación detallada</span>
+    <span class="tags"><span>explica</span><span>ecuacion</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <p>El modelo tiene 3 EDOs acopladas (T, W, C) + un submodelo algebraico (ET₀). Se resuelven simultáneamente con RK4.</p>
+
+    <!-- EDO-1 -->
+    <div class="eq-box">
+      <strong>EDO-1: Balance energético</strong><br>
+      dT<sub>in</sub>/dt = (Q<sub>rad</sub> + Q<sub>calef</sub> − Q<sub>vent</sub> − Q<sub>transp</sub>) / (ρ · C<sub>p</sub> · V)
+      <span class="label">Ecuación 1 — Temperatura interior (°C/s)</span>
+      <div class="desc">
+        <strong>Cada término explicado:</strong><br>
+        <strong>Q<sub>rad</sub></strong> = Radiación solar absorbida: R<sub>g</sub> · (1−α) · A · 0.5 [W]. α=0.23 (albedo). La R<sub>g</sub> sigue un seno diurno: R<sub>g</sub>(t) = max(0, 800 · sin(π · clip((t%24−6)/12, 0, 1))). Pico ~646 W/m² al mediodía (después de pérdidas atmosféricas). El factor 0.5 asume que la mitad calienta el aire directamente.<br><br>
+        <strong>Q<sub>calef</sub></strong> = Calefacción activa: 2000 W si T<sub>in</sub> &lt; 12°C, proporcional entre 12-15°C, 0 si T &gt; 15°C. Es un control ON/OFF proporcional simple.<br><br>
+        <strong>Q<sub>vent</sub></strong> = Pérdida por ventilación: ρ · C<sub>p</sub> · Q<sub>vent</sub> · (T<sub>in</sub>−T<sub>out</sub>) [W]. Q<sub>vent</sub> combina efecto stack (diferencia de temperatura) + viento (0.8 m/s). La ventilación se activa cuando HR &gt; 85% o T<sub>in</sub> &gt; 35°C.<br><br>
+        <strong>Q<sub>transp</sub></strong> = Enfriamiento evaporativo: ET<sub>kg</sub> · 2.45×10<sup>6</sup> J/kg. Es el calor latente de la evapotranspiración.<br><br>
+        <strong>ρ = 1.2</strong> kg/m³ (densidad del aire a 750 hPa), <strong>C<sub>p</sub> = 1005</strong> J/kg·K, <strong>V = 50</strong> m³ (volumen del invernadero).
+      </div>
+    </div>
+
+    <!-- EDO-2 -->
+    <div class="eq-box">
+      <strong>EDO-2: Balance de humedad absoluta</strong><br>
+      dW<sub>in</sub>/dt = (ET<sub>kg</sub>/ρ − Q<sub>vent</sub> · (W<sub>in</sub>−W<sub>out</sub>)/1000) / V · 1000
+      <span class="label">Ecuación 2 — Humedad absoluta interior (g/kg/s)</span>
+      <div class="desc">
+        <strong>W<sub>in</sub></strong> = humedad absoluta en g<sub>vapor</sub>/kg<sub>aire seco</sub>. Se usa en lugar de HR porque es una variable conservativa (no depende de T).<br><br>
+        <strong>ET<sub>kg</sub></strong> = tasa de evapotranspiración en kg/s (convertida de mm/h). Agrega vapor al aire.<br><br>
+        <strong>Q<sub>vent</sub> · (W<sub>in</sub>−W<sub>out</sub>)</strong> = pérdida/ganancia de vapor por ventilación. W<sub>out</sub> se calcula de T<sub>out</sub> y HR<sub>out</sub>~75% usando la relación psicrométrica.<br><br>
+        <strong>Limitación importante:</strong> cuando W<sub>in</sub> supera W<sub>sat</sub> (saturaciôn, ~100% HR), ocurre condensación. En el modelo, simplemente se clipea HR a 100% (no hay física de condensación porque no se modela W<sub>sat</sub> como variable de estado).
+      </div>
+    </div>
+
+    <!-- EDO-3 -->
+    <div class="eq-box">
+      <strong>EDO-3: Balance de CO₂</strong><br>
+      dC<sub>in</sub>/dt = −P<sub>n</sub> · A / V · 10⁶/3600 + (C<sub>out</sub> − C<sub>in</sub>) / τ
+      <span class="label">Ecuación 3 — CO₂ interior (ppm/s)</span>
+      <div class="desc">
+        <strong>P<sub>n</sub></strong> = tasa de fotosíntesis neta [kg/m²/s]: P<sub>n</sub> = P<sub>max</sub> · min(C<sub>in</sub>−C<sub>comp</sub>, 400) / (C<sub>in</sub>+200) · R<sub>g</sub>/(R<sub>g</sub>+100). Solo activa si R<sub>g</sub> &gt; 10 W/m² (hay luz) y C<sub>in</sub> &gt; C<sub>comp</sub>=40 ppm.<br><br>
+        <strong>A = 20</strong> m² (área foliar total), <strong>V = 50</strong> m³.<br><br>
+        <strong>τ = 3600</strong> s (constante de tiempo de mezcla del invernadero).<br><br>
+        <strong>C<sub>out</sub> = 420</strong> ppm (CO₂ exterior, constante).<br><br>
+        <strong>❌ Dato crítico:</strong> el CO₂ no se mide con sensor real. Se estima con modelo sintético de balance. El póster lo aclara, pero es la variable con mayor incertidumbre.
+      </div>
+    </div>
+
+    <!-- Penman-Monteith -->
+    <div class="eq-box">
+      <strong>Submodelo: Penman-Monteith (ET₀)</strong><br>
+      ET<sub>0</sub> = [Δ(R<sub>n</sub>−G) + ρ·C<sub>p</sub>·(e<sub>s</sub>−e<sub>a</sub>)/r<sub>a</sub>] / [Δ + γ·(1+r<sub>s</sub>/r<sub>a</sub>)]
+      <span class="label">Ecuación 4 — Evapotranspiración de referencia (mm/h)</span>
+      <div class="desc">
+        <strong>Δ</strong> = pendiente de la curva de presión de vapor saturante a T<sub>in</sub>: 4098·e<sub>s</sub>/(T<sub>in</sub>+237.3)² [kPa/°C]. A 20°C, Δ ≈ 0.145 kPa/°C.<br><br>
+        <strong>R<sub>n</sub></strong> = radiación neta: R<sub>g</sub>·(1−α) [W/m²]. G ≈ 0 (flujo de suelo despreciable en promedio diario).<br><br>
+        <strong>e<sub>s</sub></strong> = presión de vapor saturante: 0.6108·exp(17.27·T/(T+237.3)) [kPa].<br><br>
+        <strong>e<sub>a</sub></strong> = presión de vapor real: e<sub>s</sub>·(HR/100) [kPa].<br><br>
+        <strong>r<sub>a</sub> = 50</strong> s/m (resistencia aerodinámica), <strong>r<sub>s</sub> = 70</strong> s/m (resistencia estomática mínima).<br><br>
+        <strong>γ</strong> = constante psicrométrica (ver abajo).<br><br>
+        <strong>Interpretación física:</strong> el numerador tiene un término radiativo [Δ(R<sub>n</sub>−G)] y un término aerodinámico [ρC<sub>p</sub>(e<sub>s</sub>−e<sub>a</sub>)/r<sub>a</sub>]. El denominador pondera según la resistencia total (aerodinámica + estomática corregida por γ).<br><br>
+        <strong>ET nocturna:</strong> se fija en 0.005 mm/h cuando R<sub>g</sub> &lt; umbral (~20 W/m²), representando rocío y evaporación residual.
+      </div>
+    </div>
+
+    <!-- Psicrométrica -->
+    <div class="eq-box">
+      <strong>Corrección psicrométrica por altitud</strong><br>
+      γ = (C<sub>p</sub> · P) / (0.622 · L<sub>v</sub>)<br>
+      γ<sub>Bogotá</sub> = (1003 · 750) / (0.622 · 2.501×10⁶) ≈ <strong>0.0484 kPa/°C</strong><br>
+      <em>28% menor que γ<sub>SL</sub> ≈ 0.0665 kPa/°C (error sistemático si no se corrige)</em>
+      <span class="label">Ecuación 5 — Constante psicrométrica corregida</span>
+      <div class="desc">
+        <strong>C<sub>p</sub> = 1003</strong> J/kg·K (calor específico del aire), <strong>L<sub>v</sub> = 2.501×10⁶</strong> J/kg (calor latente de vaporización), <strong>0.622</strong> = ε (relación de masas molares agua/aire seco).<br><br>
+        <strong>γ<sub>SL</sub></strong> se calcula con P=101.325 kPa (nivel del mar). γ<sub>Bogotá</sub> usa P≈750 kPa (2640 msnm).<br><br>
+        <strong>Explicación:</strong> γ determina cuánto influye el déficit de presión de vapor vs. la radiación en la ET. Con γ menor (alta montaña), el término aerodinámico pesa más → la ET es más sensible al viento y la humedad que en tierras bajas. Ignorar esto sobreestima la ET en ~28%, que es el error que cometerían los modelos estándar no corregidos.
+      </div>
+    </div>
+
+    <!-- RK4 -->
+    <div class="eq-box">
+      <strong>Método numérico: RK4 (Runge-Kutta de 4° orden)</strong><br>
+      k₁ = f(t<sub>n</sub>, y<sub>n</sub>)<br>
+      k₂ = f(t<sub>n</sub>+h/2, y<sub>n</sub>+h·k₁/2)<br>
+      k₃ = f(t<sub>n</sub>+h/2, y<sub>n</sub>+h·k₂/2)<br>
+      k₄ = f(t<sub>n</sub>+h, y<sub>n</sub>+h·k₃)<br>
+      y<sub>n+1</sub> = y<sub>n</sub> + h/6 · (k₁ + 2k₂ + 2k₃ + k₄)
+      <span class="label">Algoritmo de integración — paso h=60 s</span>
+      <div class="desc">
+        <strong>h = 60</strong> s (paso fijo). Para 7 días: ~10,080 pasos. Error local O(h⁵), error global O(h⁴). Es un método explícito de 4 evaluaciones por paso.<br><br>
+        <strong>Ventaja sobre Euler:</strong> mucho más preciso para el mismo h. Desventaja: 4× más caro computacionalmente, pero en ESP32-S3 a 240 MHz es trivial.<br><br>
+        <strong>Clip de estabilidad:</strong> dT<sub>in</sub> ∈ [−0.5, +0.5] °C/paso, dW<sub>in</sub> ∈ [−5, +5] g/kg/paso, dC<sub>in</sub> ∈ [−10, +10] ppm/paso. Esto evita oscilaciones numéricas.
+      </div>
+    </div>
+
+    <div class="callout info">
+      <strong>📐 Nota sobre el póster:</strong> las ecuaciones en el póster están en formato texto (div.eq), no en LaTeX. Esto es suficiente para un póster HTML. Para la versión LaTeX (poster_latex.pdf), sí se usa math-mode de LaTeX.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 4: CONSTANTE PSICROMÉTRICA — EL CORAZÓN DEL PROYECTO -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica poster falla">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">4</span>
+    <span class="title">La constante psicrométrica gamma (γ) — por qué es clave</span>
+    <span class="tags"><span>explica</span><span>poster</span><span>falla</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <p><strong>γ es el parámetro más importante del modelo.</strong> Conecta la física del aire (presión, temperatura) con la biología del cultivo (evapotranspiración).</p>
+
+    <div class="status-grid">
+      <div class="item"><div class="l">γ a nivel del mar</div><div class="v">≈ 0.0665 kPa/°C</div></div>
+      <div class="item"><div class="l">γ en Bogotá (2640 msnm)</div><div class="v">≈ 0.0484 kPa/°C</div></div>
+      <div class="item"><div class="l">Diferencia</div><div class="v" style="color:var(--a)">−28%</div></div>
+      <div class="item"><div class="l">P atmosférica Bogotá</div><div class="v">≈ 750 hPa</div></div>
+      <div class="item"><div class="l">P medida (BMP280)</div><div class="v">≈ 767 hPa (+2.3%)</div></div>
+      <div class="item"><div class="l">γ con P<sub>med</sub></div><div class="v">≈ 0.0495 kPa/°C</div></div>
+    </div>
+
+    <p><strong>¿Qué significa una γ menor?</strong> En la ecuación de Penman-Monteith, γ aparece en el denominador: Δ + γ·(1+r<sub>s</sub>/r<sub>a</sub>). Con γ más pequeño, el denominador se reduce, y el término aerodinámico [ρC<sub>p</sub>(e<sub>s</sub>−e<sub>a</sub>)/r<sub>a</sub>] gana peso relativo. En la práctica: <em>a mayor altitud, la ET depende más del viento y la humedad, y menos de la radiación solar</em>. Usar γ de nivel del mar sobreestima la ET en ~28%.</p>
+
+    <div class="callout warn">
+      <strong>⚠️ Discrepancia detectada:</strong> el póster dice "γ<sub>SL</sub> ≈ 0.0665" y "varía 28%". Con P<sub>med</sub>=767 hPa, γ<sub>Bogotá</sub> real sería 0.0495, no 0.0484. La diferencia es +2.3%, que el póster menciona pero no corrige. Para una presentación rigurosa, hay que explicar por qué se usa P=750 hPa (teórica) en lugar de P=767 hPa (medida): es un criterio de replicabilidad (Stanghellini, 1987 [8]).
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 5: TINYML -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica poster falla">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">5</span>
+    <span class="title">TinyML: red neuronal en el ESP32-S3</span>
+    <span class="tags"><span>explica</span><span>poster</span><span>falla</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <div class="status-grid">
+      <div class="item"><div class="l">Arquitectura</div><div class="v" style="font-size:12px">Dense[9]→Dense[32]→Dense[16]→Dense[1]</div></div>
+      <div class="item"><div class="l">Parámetros totales</div><div class="v">865</div></div>
+      <div class="item"><div class="l">Capa de entrada</div><div class="v" style="color:var(--txd)">9×32+32 = 320</div></div>
+      <div class="item"><div class="l">Capa oculta</div><div class="v" style="color:var(--txd)">32×16+16 = 528</div></div>
+      <div class="item"><div class="l">Capa de salida</div><div class="v" style="color:var(--txd)">16×1+1 = 17</div></div>
+      <div class="item"><div class="l">Cuantización</div><div class="v">INT8 per-channel</div></div>
+      <div class="item"><div class="l">Runtime</div><div class="v">TFLite Micro</div></div>
+      <div class="item"><div class="l">Tamaño RAM</div><div class="v">~2.7 KB</div></div>
+      <div class="item"><div class="l">Modelo completo</div><div class="v">&lt; 50 KB</div></div>
+      <div class="item"><div class="l">Entradas</div><div class="v" style="font-size:11px">T, HR, R en t, t-1, t-2 (9 feats)</div></div>
+      <div class="item"><div class="l">Salida</div><div class="v">T<sub>ext</sub> a 1 h</div></div>
+      <div class="item"><div class="l">Latencia objetivo</div><div class="v">&lt; 100 ms</div></div>
+    </div>
+
+    <p><strong>¿Qué hace?</strong> Predice la temperatura exterior dentro de 1 hora (condición de borde para las EDOs). Reemplazaría el forzamiento sinusoidal simple con una predicción basada en datos, mejorando la precisión del MPC.</p>
+
+    <div class="status-grid">
+      <div class="item"><div class="l">RMSE (float32)</div><div class="v">0.81 °C</div></div>
+      <div class="item"><div class="l">RMSE (INT8)</div><div class="v">0.81 °C</div></div>
+      <div class="item"><div class="l">MAE (INT8)</div><div class="v">0.57 °C</div></div>
+      <div class="item"><div class="l">Datos entrenamiento</div><div class="v" style="font-size:11px">8781 h reales (Open-Meteo 2024)</div></div>
+      <div class="item"><div class="l">Test set</div><div class="v" style="font-size:11px">1757 h (20% hold-out)</div></div>
+      <div class="item"><div class="l">Framework</div><div class="v">scikit-learn MLPRegressor</div></div>
+      <div class="item"><div class="l">Inferencia corre en</div><div class="v">ESP32-S3 (XIAO) + bridge Python</div></div>
+    </div>
+
+    <div class="status-grid">
+      <div class="item"><div class="l">Latencia ESP32-S3</div><div class="v" style="color:var(--a)">223 ± 10 µs</div></div>
+      <div class="item"><div class="l">Latencia objetivo</div><div class="v">&lt; 100 ms</div></div>
+      <div class="item"><div class="l">Margen</div><div class="v" style="color:var(--a)">450x</div></div>
+      <div class="item"><div class="l">Throughput</div><div class="v">~4500 inf/s</div></div>
+      <div class="item"><div class="l">Frecuencia CPU</div><div class="v">240 MHz</div></div>
+      <div class="item"><div class="l">Memoria flash</div><div class="v">223 KB (de 1 MB)</div></div>
+    </div>
+
+    <div class="callout info">
+      <strong>✅ Estado actual (Jun 2026):</strong> el modelo está entrenado con <strong>8781 horas reales</strong> de Open-Meteo Bogotá 2024 (4.71°N, 74.07°W, 2640 msnm), split 80/20 temporal. RMSE float32 = INT8 = 0.81 °C, MAE = 0.57 °C. <strong>Implementado y verificado en hardware real (XIAO ESP32-S3)</strong>: latencia de inferencia medida = <strong>223 ± 10 µs</strong> @ 240 MHz (objetivo &lt; 100 ms, cumplido por margen de 450x). Forward pass manual en C (sin TFLite Micro), 80 líneas. El bridge Python corre inferencia en paralelo para comparación/backup.
+    </div>
+
+    <div class="callout warn">
+      <strong>⚠️ Limitación reconocida:</strong> Open-Meteo usa datos satelitales/reanálisis, no sensores locales. La precisión absoluta podría diferir respecto a una estación meteorológica in situ. Sin embargo, captura correctamente el ciclo diurno bogotano, que es la señal dominante en la predicción a 1 h.
+    </div>
+
+    <div class="callout warn">
+      <strong>❌ Error histórico corregido:</strong> el modelo inicial (sintético) tenía 673 params con 3 entradas. El modelo real tiene <strong>865 params con 9 entradas</strong> (lags temporales). Aumento de params: 28%, mejora de RMSE: 32% (1.18 → 0.81 °C).
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 6: RL-GUIDED MPC -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica poster futuro">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">6</span>
+    <span class="title">RL-Guided MPC: el algoritmo de control</span>
+    <span class="tags"><span>explica</span><span>poster</span><span>futuro</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <div class="eq-box">
+      <strong>RL-Guided MPC — función de costo</strong><br>
+      J<sup>RL</sup><sub>MPC</sub> = Σ<sub>k=0</sub><sup>H<sub>p</sub></sup> ⟨x<sub>k</sub>−x<sub>ref,k</sub>, Q(x<sub>k</sub>−x<sub>ref,k</sub>)⟩ + V<sup>RL</sup>(x<sub>H<sub>p</sub></sub>)
+      <span class="label">Ecuación 6 — Costo total del MPC con terminal RL</span>
+      <div class="desc">
+        <strong>Primer término (sumatoria):</strong> costo cuadrático a lo largo del horizonte de predicción H<sub>p</sub>=10 pasos (10 min). Q = diag(10, 5, 1) penaliza T, W, C respectivamente.<br><br>
+        <strong>Segundo término V<sup>RL</sup>(x<sub>H<sub>p</sub></sub>):</strong> función de valor terminal aprendida por SAC (Soft Actor-Critic). Representa el costo esperado desde el estado terminal hasta el infinito, asumiendo la política óptima de RL.<br><br>
+        <strong>¿Por qué híbrido?</strong> El MPC puro necesita horizontes largos (H<sub>p</sub> ~ 1-3 h) para estabilidad, pero eso es computacionalmente inviable en un ESP32-S3. RL puro (SAC) no tiene garantías de estabilidad. La combinación: MPC maneja la estabilidad a corto plazo (HR &lt; ±5%), RL captura efectos a largo plazo a través de V<sup>RL</sup>, permitiendo H<sub>p</sub> corto sin perder optimalidad asintótica.<br><br>
+        <strong>x<sub>ref,k</sub> = [22°C, 75% HR, 400 ppm]</strong> — setpoints de referencia. La ventilación es la única acción de control (u = caudal de ventilación).
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>⚠️ Estado real:</strong> el RL-Guided MPC está especificado y diseñado pero no implementado en el ESP32-S3. Existe simulación del MPC (en Python) y la red SAC está diseñada, pero la integración embebida completa es trabajo futuro. <strong>Si preguntan "¿ya funciona?", la respuesta honesta es:</strong> "el modelo y el controlador están diseñados y simulados en Python; la implementación en el ESP32-S3 es el siguiente paso del proyecto". El póster lo presenta como "primera arquitectura documentada", no como "sistema funcionando".
+    </div>
+
+    <div class="callout info">
+      <strong>📐 Referencia [12]:</strong> Msaad et al. (2025), arXiv:2506.13278. Es el paper que propuso RL-Guided MPC. Verificado: existe y está disponible en arXiv.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 7: ANÁLISIS DE SENSIBILIDAD -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica poster">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">7</span>
+    <span class="title">Análisis de sensibilidad: Morris + Sobol</span>
+    <span class="tags"><span>explica</span><span>poster</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <p>Dos etapas para identificar qué parámetros controlan el comportamiento del modelo:</p>
+    <div class="tree">
+      <div class="node"><span class="dot">1.</span> <strong>Morris (tamizado, N=500):</strong> varía un parámetro por vez (One-At-a-Time) y mide el efecto en la salida. Identifica parámetros influyentes vs. insignificantes entre 6 candidatos: γ, A<sub>leaf</sub>, r<sub>s</sub>, V, Q<sub>rad</sub>, P.</div>
+      <div class="node"><span class="dot">2.</span> <strong>Sobol (varianza, N=10⁴):</strong> descompone la varianza de la salida en contribuciones de cada parámetro y sus interacciones. Produce índices S<sub>i</sub> (efecto principal) y S<sub>Ti</sub> (efecto total, incluyendo interacciones).</div>
+    </div>
+    <p><strong>Resultado clave:</strong> γ y r<sub>s</sub> son los parámetros más influyentes. Esto justifica dedicar recursos a medirlos con precisión.</p>
+    <p><strong>Bandas Monte Carlo:</strong> con N=100 corridas variando γ (±15%), radiación (±20%), HR (±25%) y ET (±20%), se generan bandas del 95% que cuantifican la incertidumbre del modelo. El póster las muestra en la figura de simulación RK4 (Sección 8, sin número de figura).</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 8: LO QUE EL PÓSTER MUESTRA vs. LO QUE FALLA -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="poster falla">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">8</span>
+    <span class="title">Póster: lo que muestra bien y lo que falta</span>
+    <span class="tags"><span>poster</span><span>falla</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <p><strong>✅ Lo que el póster muestra bien (fortalezas):</strong></p>
+    <div class="tree">
+      <div class="node"><span class="dot">✓</span> <strong>Introducción clara:</strong> las 3 brechas (automatización, modelos sin calibración, brecha embebida) están bien enunciadas con referencias.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Pregunta de investigación:</strong> explícita y medible (≥40% agua, ≥5% rendimiento).</div>
+      <div class="node"><span class="dot">✓</span> <strong>Ecuaciones:</strong> presentes con corrección psicrométrica, Penman-Monteith, RL-Guided MPC.</div>
+      <div class="node"><span class="dot">✓</span> <strong>γ como contribución central:</strong> el 28% de variación y la corrección están destacados.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Arquitectura:</strong> SVG detallado con todo el flujo de datos.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Análisis de sensibilidad:</strong> Morris + Sobol citados correctamente.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Tabla de brechas:</strong> compara con 5 trabajos previos.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Figuras:</strong> paleta Okabe-Ito (daltónico-segura), 300 DPI, formato correcto.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Una página:</strong> 500×870 mm, sin desbordamiento.</div>
+      <div class="node"><span class="dot">✓</span> <strong>Limitaciones explícitas:</strong> sección añadida reconociendo el alcance preliminar.</div>
+    </div>
+
+    <p><strong>❌ Lo que falta o es engañoso (debilidades — prepárate para preguntas):</strong></p>
+    <div class="tree">
+      <div class="node"><span class="dot">✗</span> <strong>Sin métricas de validación reales.</strong> RMSE &lt;1°C, &lt;5% HR, &lt;50 ppm son <em>objetivos</em>, NO resultados. No hay ni un solo valor de RMSE/MAE/R² calculado contra datos reales. <span class="note">| Respuesta: "las métricas se obtendrán en la fase ABA de 12 semanas; los datos actuales (~11 min) son insuficientes para validación cruzada"</span></div>
+      <div class="node"><span class="dot">✓</span> <strong>TinyML entrenado, embebido y validado en hardware.</strong> Modelo Dense[9→32→16→1] con 865 params INT8, RMSE 0.81 °C, 8781 h Open-Meteo Bogotá 2024. <strong>Implementado y corriendo en XIAO ESP32-S3 (latencia 223 ± 10 µs @ 240 MHz, 450x mejor que objetivo)</strong>. <span class="note">| Pendiente: validación con sensor local (IDEAM).</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>RL-Guided MPC no implementado.</strong> Solo existe en simulación Python. <span class="note">| Respuesta: "la arquitectura híbrida está diseñada y simulada; la portabilidad a ESP32-S3 con horizonte Hp=10 está especificada como trabajo futuro"</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>CO₂ es estimado, no medido.</strong> El póster lo aclara (C<sub>out</sub> sintético), pero la Fig 3 puede dar la impresión de que hay un sensor de CO₂. <span class="note">| Respuesta: "el CO₂ se obtiene por balance de carbono, no por sensor; es una limitación reconocida"</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>Dataset mínimo.</strong> 11 min de datos (132 pts/variable) no alcanzan para validar un modelo dinámico. <span class="note">| Respuesta: "los datos actuales son una prueba de concepto del hardware; la validación estadística requiere semanas de datos"</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>Fotosíntesis simplificada.</strong> P<sub>n</sub> depende de R<sub>g</sub> y C<sub>in</sub> pero trata la luz de forma lineal (Michaelis-Menten simplificado). <span class="note">| Respuesta: "es un modelo de primer orden suficiente para control, no para investigación fisiológica"</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>Condensación no modelada.</strong> HR se clipea a 100% sin modelar W<sub>sat</sub>. <span class="note">| Respuesta: "incluir condensación requiere una EDO adicional para W<sub>sat</sub>; se deja para trabajo futuro"</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>Diseño ABA incompleto.</strong> "Tres replicaciones" es terminología confusa; son 3 fases (A-B-A), no 3 repeticiones. <span class="note">| Respuesta: "son 4 semanas por fase, total 12 semanas: A (manual) → B (automático) → A (manual)"</span></div>
+      <div class="node"><span class="dot">✗</span> <strong>P<sub>med</sub> vs. P<sub>teórica</sub>.</strong> 767 vs 750 hPa (2.3% de diferencia). Se usa la teórica para replicabilidad, pero hay que explicarlo. <span class="note">| Respuesta: "usamos P teórica de 750 hPa según Stanghellini [8] para que el modelo sea reproducible en cualquier invernadero a 2640 msnm"</span></div>
+    </div>
+
+    <div class="callout danger">
+       <strong>🚨 Posibles preguntas difíciles en la presentación:</strong><br>
+       1. "¿Dónde están los resultados experimentales?" → No hay. Son objetivos. Hay que decirlo sin titubear.<br>
+       2. "¿Ya probaron el TinyML en el ESP32?" → <strong>SÍ</strong>. Implementado en firmware bare-metal (sin TFLite Micro). Validado en XIAO ESP32-S3 con latencia de 223 ± 10 µs (objetivo &lt; 100 ms, cumplido por 450x). Forward pass de 80 líneas en C, cuantización per-channel INT8.<br>
+       3. "¿El MPC funciona?" → En simulación sí. En el ESP32, no está integrado.<br>
+       4. "¿Por qué 865 params?" → Dense[9→32→16→1]: capa de entrada 9×32+32=320 + oculta 32×16+16=528 + salida 16×1+1=17. Las 9 entradas son (T, HR, R) en t, t-1, t-2.<br>
+      5. "¿Por qué P=750 y no 767?" → Por replicabilidad del método de Stanghellini.<br>
+      6. "¿Qué tan preciso es el modelo?" → No lo sabemos. Necesitamos datos de semanas para calcular RMSE real.<br>
+      7. "¿Cuál es la contribución novedosa?" → La arquitectura híbrida EDOs+TinyML+MPC en un solo MCU (concepto), más la corrección psicrométrica para clima andino.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 9: HARDWARE — EL ESP32-S3 Y LOS SENSORES -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica poster">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">9</span>
+    <span class="title">Hardware: ESP32-S3, sensores y firmware</span>
+    <span class="tags"><span>explica</span><span>poster</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <div class="status-grid">
+      <div class="item"><div class="l">Placa</div><div class="v">XIAO ESP32-S3</div></div>
+      <div class="item"><div class="l">CPU</div><div class="v">Xtensa LX7 @ 240 MHz</div></div>
+      <div class="item"><div class="l">SRAM</div><div class="v">512 KB</div></div>
+      <div class="item"><div class="l">Flash</div><div class="v">8 MB</div></div>
+      <div class="item"><div class="l">AHT20 T</div><div class="v">±0.3°C</div></div>
+      <div class="item"><div class="l">AHT20 HR</div><div class="v">±2%</div></div>
+      <div class="item"><div class="l">BMP280 P</div><div class="v">±1 hPa</div></div>
+      <div class="item"><div class="l">I2C bus</div><div class="v">50 kHz</div></div>
+      <div class="item"><div class="l">Salida</div><div class="v" style="font-size:11px">CSV 8 col @ 115200 baud</div></div>
+    </div>
+
+    <p><strong>Firmware:</strong> Escrito en C bare-metal (ESP-IDF v6.1). No usa Arduino ni HAL. Drivers propietarios para AHT20 y BMP280 implementados desde cero con acceso directo a registros I2C. Bucle principal: leer sensores → formatear CSV → enviar por serial. Watchdog timer para detección de cuelgues.</p>
+
+    <p><strong>Bridge Python:</strong> serial_bridge.py lee el puerto serial (/dev/ttyACM0), parsea CSV y sirve JSON en cuatro endpoints: /data (última lectura), /history (últimos 30 min), /health (estado de conexión), /tinyml_pred (predicción TinyML). Al iniciar carga tinyml_model.npz (32 KB) y corre inferencia en cada lectura. Usa .item() para compatibilidad con numpy ≥3.14. Corre en la PC, no en el ESP32.</p>
+
+    <p><strong>Dashboard:</strong> presentacion.html — interfaz tipo terminal retro con Chart.js. Muestra T, HR, P en gráficos en vivo, pestaña "TinyML" con predicción a 1 h + chart actual vs predicho, simulacion RK4 embebida en JavaScript, y pestaña de ecuaciones. Todo el estilo es verde/negro (estética "matrix" o "terminal hacking").</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 10: TRABAJO FUTURO Y HOJA DE RUTA -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="futuro falla">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">10</span>
+    <span class="title">Trabajo futuro — lo que realmente falta</span>
+    <span class="tags"><span>futuro</span><span>falla</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <p>El proyecto está en fase de diseño y prototipo. Esto es lo que falta para tener un sistema funcional:</p>
+
+    <table>
+      <tr><th>Tarea</th><th>Prioridad</th><th>Esfuerzo</th><th>Estado</th></tr>
+      <tr><td>Campaña de medición extendida (&gt;2 semanas)</td><td><span class="badge fail">Crítica</span></td><td>Alto</td><td>Pendiente</td></tr>
+      <tr><td>Portar TinyML a C en ESP32-S3 (TFLite Micro)</td><td><span class="badge fail">Crítica</span></td><td>Alto</td><td><strong>Hecho</strong></td></tr>
+      <tr><td>Validar TinyML con datos de estación local (IDEAM o sensor propio)</td><td><span class="badge warn">Alta</span></td><td>Medio</td><td>Pendiente</td></tr>
+      <tr><td>Portar MPC a C en ESP32-S3</td><td><span class="badge fail">Crítica</span></td><td>Alto</td><td>Pendiente</td></tr>
+      <tr><td>Integrar TinyML + RK4 + MPC en firmware</td><td><span class="badge warn">Alta</span></td><td>Alto</td><td>Pendiente</td></tr>
+      <tr><td>Implementar RL (SAC) y entrenar V<sup>RL</sup></td><td><span class="badge warn">Alta</span></td><td>Alto</td><td>Pendiente</td></tr>
+      <tr><td>Diseño ABA de 12 semanas en invernadero piloto</td><td><span class="badge warn">Alta</span></td><td>Muy Alto</td><td>Pendiente</td></tr>
+      <tr><td>Agregar sensor de CO₂ real (SCD41)</td><td><span class="badge">Media</span></td><td>Bajo</td><td>Pendiente</td></tr>
+      <tr><td>Modelar condensación (W<sub>sat</sub> dinámico)</td><td><span class="badge">Media</span></td><td>Medio</td><td>Pendiente</td></tr>
+      <tr><td>Comunicación inalámbrica (WiFi/MQTT)</td><td><span class="badge">Media</span></td><td>Medio</td><td>Pendiente</td></tr>
+      <tr><td>Validación multi-sitio (3 departamentos)</td><td><span class="badge">Baja</span></td><td>Muy Alto</td><td>Futuro lejano</td></tr>
+      <tr><td>App móvil para monitoreo remoto</td><td><span class="badge">Baja</span></td><td>Alto</td><td>Futuro lejano</td></tr>
+    </table>
+
+    <div class="callout info">
+      <strong>📋 Hecho hasta ahora:</strong> ✅ Firmware C funcional (drivers I2C propios, loop 5s, CSV serial) · ✅ Bridge Python HTTP + TinyML inference · ✅ Dashboard web en vivo (pestaña TinyML) · ✅ Modelo RK4 en Python (4 EDOs) · ✅ Figuras del póster (matplotlib, 300 DPI) · ✅ Póster HTML + PDF (1 página, 500×870 mm) · ✅ Póster LaTeX alternativo · ✅ TinyML entrenado con datos REALES (865 params, INT8, RMSE 0.81 °C) · ✅ <strong>TinyML embebido en ESP32-S3 (latencia 223 ± 10 µs)</strong> · ✅ SVG arquitectura TinyML (Fig 4) · ✅ Figura validación TinyML (Fig 5) · ✅ Diseño RL-Guided MPC · ✅ Análisis de sensibilidad (Morris + Sobol)
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 11: PREGUNTAS FRECUENTES -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">11</span>
+    <span class="title">FAQ — preguntas frecuentes en la sustentación</span>
+    <span class="tags"><span>explica</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <table>
+      <tr><th style="width:25%">Pregunta</th><th>Respuesta</th></tr>
+      <tr>
+        <td><strong>¿Cuál es la contribución original?</strong></td>
+        <td>Primera arquitectura documentada que integra (1) resolución numérica de 4 EDOs acopladas, (2) inferencia TinyML (red neuronal de 865 params INT8, RMSE 0.81 °C) y (3) control predictivo RL-Guided MPC en un solo microcontrolador ESP32-S3, con corrección psicrométrica para 2640 msnm.</td>
+      </tr>
+      <tr>
+        <td><strong>¿Por qué es importante la corrección psicrométrica?</strong></td>
+        <td>γ determina el balance entre radiación y viento en la ET. A 750 hPa, γ es 28% menor que a nivel del mar. Ignorarlo sobreestima la demanda hídrica del cultivo en ~28%, llevando a riego excesivo y estrés por exceso de humedad.</td>
+      </tr>
+      <tr>
+        <td><strong>¿El sistema ya funciona en un invernadero real?</strong></td>
+        <td>El hardware de sensado y el dashboard funcionan (datos en vivo por serial/USB). El modelo RK4 corre en simulación. La integración completa (TinyML+MPC en el ESP32) está diseñada pero no implementada. La validación ABA está planeada para 12 semanas.</td>
+      </tr>
+      <tr>
+        <td><strong>673 params vs 545 — cuál es correcto?</strong></td>
+        <td>673 es correcto. 545 omitía los 128 parámetros de la capa de entrada (3 entradas × 32 neuronas + 32 biases). La fórmula detallada es: (3×32+32) + (32×16+16) + (16×1+1) = 128 + 528 + 17 = 673.</td>
+      </tr>
+      <tr>
+        <td><strong>¿Por qué no usaron un sensor de CO₂ real?</strong></td>
+        <td>El sensor SCD41 (CO₂) cuesta ~$50 USD y estaba fuera del presupuesto del prototipo. Se modeló con balance de carbono como alternativa. La precisión es limitada pero útil para el diseño del controlador.</td>
+      </tr>
+      <tr>
+        <td><strong>¿Por qué P=750 hPa en lugar de la medida (767)?</strong></td>
+        <td>Para replicabilidad. P=750 hPa es el valor teórico estándar a 2640 msnm según la atmósfera ISA (International Standard Atmosphere). La diferencia del 2.3% está dentro del margen de incertidumbre del modelo, y usar el valor teórico permite que otros investigadores reproduzcan el modelo sin depender de una medición local.</td>
+      </tr>
+      <tr>
+        <td><strong>¿Cómo se financia el sistema completo?</strong></td>
+        <td>Presupuesto estimado: $2,250 USD incluyendo ESP32-S3 ($8 c/u), sensores, actuadores, Raspberry Pi como gateway, componentes y contingencias. La meta de costo del sistema completo es &lt;$2,500 USD.</td>
+      </tr>
+      <tr>
+        <td><strong>¿Qué pasa si el ESP32 se queda sin memoria?</strong></td>
+        <td>El modelo TinyML usa ~2.7 KB para pesos (865 params INT8), el runtime TFLite Micro ~20 KB, las EDOs ~10 KB, el MPC ~15 KB. Total estimado: &lt;100 KB de SRAM de 512 KB. Hay margen suficiente. Si hay problemas, se reduce la red a Dense[8→8→1] (~100 params).</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 12: MAPA DE ARCHIVOS DEL PROYECTO -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div class="section" data-tags="explica">
+  <div class="section-h" onclick="toggleSection(this)">
+    <span class="num">12</span>
+    <span class="title">Estructura del proyecto — archivos clave</span>
+    <span class="tags"><span>explica</span></span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-b">
+    <table>
+      <tr><th>Archivo</th><th>Qué hace</th><th>Dónde corre</th></tr>
+      <tr><td><code>main/main.c</code></td><td>Firmware ESP32: drivers I2C, loop 5s, CSV serial, watchdog, inferencia TinyML</td><td>ESP32-S3</td></tr>
+      <tr><td><code>serial_bridge.py</code></td><td>Puente serial→HTTP: lee CSV del ESP32, sirve JSON</td><td>PC (Python)</td></tr>
+      <tr><td><code>presentacion.html</code></td><td>Dashboard web en vivo con Chart.js, simulación embebida, ecuaciones</td><td>Navegador</td></tr>
+      <tr><td><code>simulation.py</code></td><td>Modelo RK4 de 7 días, 4 EDOs acopladas, condiciones Bogotá</td><td>PC (Python)</td></tr>
+      <tr><td><code>comparison.py</code></td><td>Compara simulación vs datos reales (RMSE/MAE)</td><td>PC (Python)</td></tr>
+      <tr><td><code>data_reader.py</code></td><td>Captura datos serial a CSV (útil para campañas de medición)</td><td>PC (Python)</td></tr>
+      <tr><td><code>generate_poster_figures.py</code></td><td>Genera las 4 figuras del póster (matplotlib, 300 DPI)</td><td>PC (Python)</td></tr>
+      <tr><td><code>poster_cientifico.html</code></td><td>Póster científico HTML (500×870 mm, 2 columnas, olive/gold)</td><td>Navegador → Playwright → PDF</td></tr>
+      <tr><td><code>html_to_pdf.py</code></td><td>Convierte HTML→PDF con Playwright (Chromium)</td><td>PC (Python)</td></tr>
+      <tr><td><code>poster_cientifico.tex</code></td><td>Póster en LaTeX (tikzposter, A0, newpxtext)</td><td>pdflatex</td></tr>
+      <tr><td><code>figures/fig3_arch.svg</code></td><td>SVG de arquitectura (manual, no generado por matplotlib)</td><td>Editor SVG</td></tr>
+    </table>
+
+    <div class="highlight">
+      <strong>🔥 Dato importante:</strong> la Fig 3 (arquitectura) es un SVG manual, NO se regenera con <code>generate_poster_figures.py</code>. Si se modifican las figuras, el SVG puede quedar desactualizado. El resto de figuras (1, 2, 4) se regeneran automáticamente.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<div style="padding: 16px; text-align: center; font-size: 10px; color: var(--txd); border-top: 1px solid var(--b); margin-top: 10px;">
+  <strong>Guía de Presentación</strong> · Proyecto Invernadero Andino · v1.0 · Mayo 2026<br>
+  Universidad Distrital Francisco José de Caldas · Bogotá D.C., Colombia<br>
+  <span style="color:var(--g);font-size:11px;">lycoronelp@udistrital.edu.co</span>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ─── TOGGLE SECTION ───
+function toggleSection(el) {
+  var body = el.nextElementSibling;
+  var tog = el.querySelector('.toggle');
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    tog.textContent = '▶';
+  } else {
+    body.classList.add('open');
+    tog.textContent = '▼';
+  }
+}
+
+// ─── TAG FILTER ───
+var activeTag = 'todas';
+
+function toggleTag(el, tag) {
+  document.querySelectorAll('.tag').forEach(function(t) { t.classList.remove('sel'); });
+  el.classList.add('sel');
+  activeTag = tag;
+  filterContent();
+}
+
+function filterContent() {
+  var q = document.getElementById('search').value.toLowerCase();
+  var hasSearch = q.trim().length > 0;
+  document.querySelectorAll('.section').forEach(function(s) {
+    var tags = s.getAttribute('data-tags') || '';
+    var text = s.textContent.toLowerCase();
+
+    var matchTag = (activeTag === 'todas') || tags.includes(activeTag);
+    var matchSearch = !hasSearch || text.includes(q);
+
+    if (matchTag && matchSearch) {
+      s.classList.remove('hidden');
+    } else {
+      s.classList.add('hidden');
+    }
+  });
+}
+
+// ─── OPEN ALL FOR SEARCH ───
+document.getElementById('search').addEventListener('input', function() {
+  if (this.value.trim().length > 0) {
+    document.querySelectorAll('.section-b').forEach(function(b) { b.classList.add('open'); });
+    document.querySelectorAll('.toggle').forEach(function(t) { t.textContent = '▼'; });
+  }
+});
+
+// ─── OPEN FIRST SECTION BY DEFAULT ───
+document.querySelectorAll('.section')[0].querySelector('.section-b').classList.add('open');
+document.querySelectorAll('.section')[0].querySelector('.toggle').textContent = '▼';
+</script>
+
+</body>
+</html>
