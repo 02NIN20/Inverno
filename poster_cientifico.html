@@ -246,6 +246,12 @@ table.gaps td {
 sub, sup { font-size: 9px; }
 
 /* ─── REFS / CONTACT ─── */
+.refs-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4mm;
+  align-items: start;
+}
 .sec .refs {
   font-size: 11px;
   line-height: 1.4;
@@ -253,24 +259,34 @@ sub, sup { font-size: 9px; }
   list-style: none;
   padding: 0;
   margin: 0;
+  columns: 2;
+  column-gap: 5mm;
 }
 .sec .refs li {
   padding-left: 4.5mm;
   text-indent: -4.5mm;
   margin-bottom: 0.2mm;
   break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
 }
 .sec .refs li::before { content: none; }
 .sec .refs b { color: #4a5d23; font-weight: 600; }
-.sec .refs .qr-row {
-  list-style: none;
-  padding-left: 0;
-  text-indent: 0;
-  margin: 1.5mm 0 0 0;
+.qr-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4mm;
-  justify-content: center;
+  gap: 1mm;
+  padding: 1.5mm 2mm;
+  background: #f6f2e7;
+  border: 1px solid #c8a84e;
+  border-radius: 1mm;
+  text-align: center;
+}
+.qr-cap {
+  font-size: 10px;
+  line-height: 1.25;
+  color: #444;
 }
 
 /* ─── PRINT ─── */
@@ -409,26 +425,32 @@ sub, sup { font-size: 9px; }
 
   <div class="sec">
     <h2>Referencias</h2>
-    <ul class="refs">
-      <li><b>[1]</b> Zhang et al. (2022). <em>Water</em>, 14(23), 3941.</li>
-      <li><b>[2]</b> Ihoume et al. (2022). <em>Smart Agric. Tech.</em>, 2, 100039.</li>
-      <li><b>[3]</b> Lopez-Cruz et al. (2018). <em>Eur. J. Hort. Sci.</em>, 83(5), 269.</li>
-      <li><b>[4]</b> Queralt (2024). PhD thesis, Univ. Li&egrave;ge.</li>
-      <li><b>[5]</b> Chen et al. (2021). <em>Biosyst. Eng.</em>, 204, 1.</li>
-      <li><b>[6]</b> Morales-Garc&iacute;a et al. (2023). <em>J. Supercomput.</em>, 79, 10277.</li>
-      <li><b>[7]</b> Tsoukas et al. (2022). <em>Proc. PCI 2022</em>, ACM, 207.</li>
-      <li><b>[8]</b> Stanghellini (1987). PhD thesis, Wageningen.</li>
-      <li><b>[9]</b> Islam et al. (2012). <em>Trans. ASABE</em>, 55(6), 2135.</li>
-      <li><b>[10]</b> van Straten et al. (2020). <em>Optimal Ctrl. Greenhouse Cultivation</em>, CRC.</li>
-      <li><b>[11]</b> Hemming et al. (2023). <em>Comp. Electron. Agric.</em>, 210, 107924.</li>
-      <li><b>[12]</b> Msaad et al. (2025). <em>IFAC-PapersOnLine</em>. arXiv:2506.13278.</li>
-      <li><b>[13]</b> Codeluppi et al. (2021). <em>Sensors</em>, 21(12), 3973.</li>
-      <li><b>[14]</b> Saltelli et al. (2008). <em>Global Sensitivity Analysis</em>, Wiley.</li>
-      <li><b>[15]</b> Kazdin (2011). <em>Single-Case Research Designs</em>, Oxford.</li>
-      <li class="qr-row" style="flex-direction:column;gap:0mm;margin-top:1.5mm;">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=20&data=https://github.com/02NIN20/Inverno" alt="QR" style="width:24mm;height:24mm;">
-      </li>
-    </ul>
+    <div class="refs-grid">
+      <ul class="refs">
+        <li><b>[1]</b> Zhang et al. (2022). <em>Water</em>, 14(23), 3941.</li>
+        <li><b>[2]</b> Ihoume et al. (2022). <em>Smart Agric. Tech.</em>, 2, 100039.</li>
+        <li><b>[3]</b> Lopez-Cruz et al. (2018). <em>Eur. J. Hort. Sci.</em>, 83(5), 269.</li>
+        <li><b>[4]</b> Queralt (2024). PhD thesis, Univ. Li&egrave;ge.</li>
+        <li><b>[5]</b> Chen et al. (2021). <em>Biosyst. Eng.</em>, 204, 1.</li>
+        <li><b>[6]</b> Morales-Garc&iacute;a et al. (2023). <em>J. Supercomput.</em>, 79, 10277.</li>
+        <li><b>[7]</b> Tsoukas et al. (2022). <em>Proc. PCI 2022</em>, ACM, 207.</li>
+        <li><b>[8]</b> Stanghellini (1987). PhD thesis, Wageningen.</li>
+        <li><b>[9]</b> Islam et al. (2012). <em>Trans. ASABE</em>, 55(6), 2135.</li>
+        <li><b>[10]</b> van Straten et al. (2020). <em>Optimal Ctrl. Greenhouse Cultivation</em>, CRC.</li>
+        <li><b>[11]</b> Hemming et al. (2023). <em>Comp. Electron. Agric.</em>, 210, 107924.</li>
+        <li><b>[12]</b> Msaad et al. (2025). <em>IFAC-PapersOnLine</em>. arXiv:2506.13278.</li>
+        <li><b>[13]</b> Codeluppi et al. (2021). <em>Sensors</em>, 21(12), 3973.</li>
+        <li><b>[14]</b> Saltelli et al. (2008). <em>Global Sensitivity Analysis</em>, Wiley.</li>
+        <li><b>[15]</b> Kazdin (2011). <em>Single-Case Research Designs</em>, Oxford.</li>
+      </ul>
+      <div class="qr-card">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=20&data=https://github.com/02NIN20/Inverno" alt="QR" style="width:32mm;height:32mm;">
+        <div class="qr-cap">
+          <b style="color:#4a5d23;">Repositorio</b><br>
+          github.com/<br>02NIN20/Inverno
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -482,7 +504,7 @@ sub, sup { font-size: 9px; }
     <h2>10. Conclusiones y trabajo futuro</h2>
     <ul>
       <li>Se propuso un modelo acoplado de 3 EDOs + submodelo ET&#8320; con corrección psicrométrica para altitud andina (&gamma; = 0.0484 kPa/&deg;C), pendiente de validación experimental completa en la fase ABA.</li>
-      <li>La integración TinyML (Dense[32]&rarr;Dense[16]&rarr;Dense[1], 673 params INT8, &lt; 50 KB) + RL-Guided MPC (H<sub>p</sub> = 10 min, Q diag) en un ESP32-S3 constituye la primera arquitectura híbrida EDOs-TinyML-MPC en un MCU propuesta en la literatura revisada.</li>
+      <li>La integración TinyML (Dense[9&rarr;32&rarr;16&rarr;1], 865 params INT8, &lt; 10 KB) + RL-Guided MPC (H<sub>p</sub> = 10 min, Q diag) en un ESP32-S3 constituye la primera arquitectura híbrida EDOs-TinyML-MPC en un MCU propuesta en la literatura revisada. <em>(Solo el módulo TinyML está implementado en HW; el RL-Guided MPC está pendiente de portar a C)</em>.</li>
       <li>El análisis de sensibilidad global (Morris + Sobol, N = 10<sup>4</sup>) identifica &gamma; y r<sub>s</sub> como parámetros críticos, y las bandas Monte Carlo del 95% cuantifican la incertidumbre en las predicciones del modelo.</li>
       <li><strong>Trabajo futuro:</strong> implementar el diseño ABA completo (12 semanas, piloto 200 m<sup>2</sup>), validar ahorro de agua &ge; 40% y mejora de rendimiento &ge; 5%, y explorar TinyML en-sensor (AHT20 integrado) para reducir aún más el consumo energético.</li>
     </ul>
