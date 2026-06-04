@@ -344,33 +344,38 @@ def fig_simulation():
     ax.plot(t, Tin_nom, color=c1, linewidth=1.5, label="Tin")
     ax.plot(t, Tout_nom, color="gray", linestyle="--", linewidth=1.0, label="Tout")
     ax.set_ylabel("Temperatura (°C)")
-    ax.set_title("Temperatura interior / exterior", fontweight="bold", fontsize=11)
-    ax.legend(fontsize=9, frameon=False)
+    ax.set_title("Temperatura interior / exterior", fontweight="bold", fontsize=10.5, pad=14)
+    ax.legend(fontsize=9, frameon=False, loc="upper right")
     ax.set_xticks(tick_hours); ax.set_xticklabels(tick_labels)
 
     # ─── Panel B: HR ───
     ax = axes[0,1]
     ax.fill_between(t, pctl(mc_RH, 5), pctl(mc_RH, 95), alpha=0.15, color=c2)
     ax.plot(t, RH_nom, color=c2, linewidth=1.5)
-    ax.axhline(y=85, color="#D55E00", linestyle=":", alpha=0.5, label="Umbral diseno (85%)")
+    ax.axhline(y=85, color="#D55E00", linestyle=":", alpha=0.5,
+               label="Umbral diseño (85%)", xmin=0.05, xmax=0.95)
     ax.set_ylabel("Humedad (%)")
-    ax.set_title("Humedad relativa y ventilación", fontweight="bold", fontsize=11)
-    ax.legend(fontsize=8, frameon=False)
+    ax.set_title("Humedad relativa y ventilación", fontweight="bold", fontsize=10.5, pad=14)
+    ax.legend(fontsize=8, frameon=True, facecolor="white", edgecolor="#cccccc",
+              loc="upper right", bbox_to_anchor=(0.98, 0.98))
     ax.set_xticks(tick_hours); ax.set_xticklabels(tick_labels)
-    ax.text(0.98, 0.05, "Ventilación: lazo abierto. HR cortada en 100% (condensación)",
-            transform=ax.transAxes, ha="right", va="bottom",
-            fontsize=7, color="#D55E00", fontstyle="italic")
+    ax.text(0.02, 0.04, "Lazo abierto · HR ≤ 100% (condensación)",
+            transform=ax.transAxes, ha="left", va="bottom",
+            fontsize=7, color="#D55E00", fontstyle="italic",
+            bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1))
 
     # ─── Panel C: CO2 ───
     ax = axes[1,0]
     ax.fill_between(t, pctl(mc_CO2, 5), pctl(mc_CO2, 95), alpha=0.15, color=c3)
     ax.fill_between(t, CO2_nom, 350, alpha=0.12, color=c3)
     ax.plot(t, CO2_nom, color=c3, linewidth=1.5)
-    ax.axhline(y=400, color="#555", linestyle="-.", alpha=0.5, linewidth=0.8, label="400 ppm (punto compensación)")
+    ax.axhline(y=400, color="#555", linestyle="-.", alpha=0.5, linewidth=0.8,
+               label="400 ppm (compensación)", xmin=0.05, xmax=0.95)
     ax.set_ylabel("CO2 (ppm)")
     ax.set_xlabel("Dias")
-    ax.set_title("CO2 estimado", fontweight="bold", fontsize=11)
-    ax.legend(fontsize=8, frameon=False)
+    ax.set_title("CO2 estimado (balance de carbono)", fontweight="bold", fontsize=10.5, pad=14)
+    ax.legend(fontsize=8, frameon=True, facecolor="white", edgecolor="#cccccc",
+              loc="upper right")
     ax.set_xticks(tick_hours); ax.set_xticklabels(tick_labels)
 
     # ─── Panel D: ET ───
@@ -379,17 +384,19 @@ def fig_simulation():
     ax.plot(t, ETr_nom, color=c4, linewidth=1.5)
     ax.set_ylabel("ETr (mm/h)")
     ax.set_xlabel("Dias")
-    ax.set_title("Evapotranspiración (Penman-Monteith)", fontweight="bold", fontsize=11)
+    ax.set_title("Evapotranspiración (Penman-Monteith)", fontweight="bold", fontsize=10.5, pad=14)
     ax.set_xticks(tick_hours); ax.set_xticklabels(tick_labels)
-    ax.text(0.98, 0.05, "ET nocturna ~0.005 mm/h (rad. umbral < 20 W/m2)",
-            transform=ax.transAxes, ha="right", va="bottom",
-            fontsize=7, color="#555", fontstyle="italic")
+    ax.text(0.5, 0.93, "ET nocturna ≈ 0.005 mm/h  (R$_g$ < 20 W/m²)",
+            transform=ax.transAxes, ha="center", va="top",
+            fontsize=7, color="#555", fontstyle="italic",
+            bbox=dict(facecolor="white", edgecolor="#cccccc", alpha=0.9, pad=2))
+    ax.set_ylim(bottom=-0.02, top=0.32)
 
-    # Panel labels
+    # Panel labels (A, B, C, D) — placed clear of the title and y-label
     from string import ascii_uppercase
     for i, ax in enumerate(axes.flat):
-        ax.text(-0.08, 1.02, ascii_uppercase[i], transform=ax.transAxes,
-                fontsize=13, fontweight="bold", va="bottom", ha="left", color="#4a5d23")
+        ax.text(-0.22, 1.06, ascii_uppercase[i], transform=ax.transAxes,
+                fontsize=14, fontweight="bold", va="bottom", ha="left", color="#4a5d23")
 
     fig.suptitle("Simulación RK4: 7 dias en condiciones de Bogotá (2640 msnm, 750 hPa)",
                  fontweight="bold", fontsize=13)
